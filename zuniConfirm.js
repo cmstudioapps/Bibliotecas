@@ -1,101 +1,77 @@
-// zuniAlertConfirm.js
+(function() {
+  // Função para criar o alert customizado
+  function createAlert(message, buttonText1, buttonText2, onButtonClick1, onButtonClick2) {
+    // Criação do container do alerta
+    const alertContainer = document.createElement('div');
+    alertContainer.style.position = 'fixed';
+    alertContainer.style.top = '50%';
+    alertContainer.style.left = '50%';
+    alertContainer.style.transform = 'translate(-50%, -50%)';
+    alertContainer.style.backgroundColor = '#fff';
+    alertContainer.style.borderRadius = '10px';
+    alertContainer.style.padding = '20px';
+    alertContainer.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+    alertContainer.style.zIndex = '1000';
 
-function zuniAlertConfirm(options) {
-  // Parâmetros padrões
-  const defaultOptions = {
-    title: 'Confirmação',
-    message: 'Você tem certeza?',
-    icon: 'info', // Pode ser 'success', 'error', 'info', 'warning'
-    confirmText: 'Sim',
-    cancelText: 'Não',
-    backgroundColor: '#007bff',
-    confirmCallback: null,
-    cancelCallback: null,
-  };
+    // Adiciona a mensagem
+    const messageElement = document.createElement('p');
+    messageElement.innerText = message;
+    messageElement.style.fontSize = '18px';
+    messageElement.style.marginBottom = '20px';
+    alertContainer.appendChild(messageElement);
 
-  // Combina os parâmetros passados com os padrões
-  const config = { ...defaultOptions, ...options };
+    // Criação dos botões
+    const buttonContainer = document.createElement('div');
+    buttonContainer.style.display = 'flex';
+    buttonContainer.style.justifyContent = 'space-between';
 
-  // Criação do modal de confirmação
-  const confirmModal = document.createElement('div');
-  confirmModal.style.position = 'fixed';
-  confirmModal.style.top = '50%';
-  confirmModal.style.left = '50%';
-  confirmModal.style.transform = 'translate(-50%, -50%)';
-  confirmModal.style.padding = '20px';
-  confirmModal.style.backgroundColor = '#fff';
-  confirmModal.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-  confirmModal.style.borderRadius = '8px';
-  confirmModal.style.textAlign = 'center';
-  confirmModal.style.zIndex = '9999';
+    const button1 = document.createElement('button');
+    button1.innerText = buttonText1;
+    button1.style.backgroundColor = '#8e44ad'; // Roxo
+    button1.style.color = '#fff';
+    button1.style.padding = '10px 20px';
+    button1.style.border = 'none';
+    button1.style.borderRadius = '5px';
+    button1.style.cursor = 'pointer';
+    button1.style.transition = 'background-color 0.3s';
+    button1.addEventListener('click', function() {
+      onButtonClick1();
+      document.body.removeChild(alertContainer);
+    });
+    button1.addEventListener('mouseenter', () => {
+      button1.style.backgroundColor = '#9b59b6';
+    });
+    button1.addEventListener('mouseleave', () => {
+      button1.style.backgroundColor = '#8e44ad';
+    });
 
-  // Título
-  const titleElement = document.createElement('h3');
-  titleElement.innerText = config.title;
-  confirmModal.appendChild(titleElement);
+    const button2 = document.createElement('button');
+    button2.innerText = buttonText2;
+    button2.style.backgroundColor = '#3498db'; // Azul
+    button2.style.color = '#fff';
+    button2.style.padding = '10px 20px';
+    button2.style.border = 'none';
+    button2.style.borderRadius = '5px';
+    button2.style.cursor = 'pointer';
+    button2.style.transition = 'background-color 0.3s';
+    button2.addEventListener('click', function() {
+      onButtonClick2();
+      document.body.removeChild(alertContainer);
+    });
+    button2.addEventListener('mouseenter', () => {
+      button2.style.backgroundColor = '#2980b9';
+    });
+    button2.addEventListener('mouseleave', () => {
+      button2.style.backgroundColor = '#3498db';
+    });
 
-  // Mensagem
-  const messageElement = document.createElement('p');
-  messageElement.innerText = config.message;
-  confirmModal.appendChild(messageElement);
+    buttonContainer.appendChild(button1);
+    buttonContainer.appendChild(button2);
 
-  // Botões
-  const buttonContainer = document.createElement('div');
-  buttonContainer.style.marginTop = '20px';
-
-  // Botão Sim
-  const confirmButton = document.createElement('button');
-  confirmButton.innerText = config.confirmText;
-  confirmButton.style.marginRight = '10px';
-  confirmButton.style.padding = '10px 20px';
-  confirmButton.style.backgroundColor = config.backgroundColor;
-  confirmButton.style.color = '#fff';
-  confirmButton.style.border = 'none';
-  confirmButton.style.borderRadius = '5px';
-  confirmButton.style.cursor = 'pointer';
-  confirmButton.onclick = function () {
-    if (config.confirmCallback) config.confirmCallback();
-    closeConfirm();
-  };
-  buttonContainer.appendChild(confirmButton);
-
-  // Botão Não
-  const cancelButton = document.createElement('button');
-  cancelButton.innerText = config.cancelText;
-  cancelButton.style.padding = '10px 20px';
-  cancelButton.style.backgroundColor = '#ccc';
-  cancelButton.style.color = '#000';
-  cancelButton.style.border = 'none';
-  cancelButton.style.borderRadius = '5px';
-  cancelButton.style.cursor = 'pointer';
-  cancelButton.onclick = function () {
-    if (config.cancelCallback) config.cancelCallback();
-    closeConfirm();
-  };
-  buttonContainer.appendChild(cancelButton);
-
-  confirmModal.appendChild(buttonContainer);
-
-  // Função para fechar o modal
-  function closeConfirm() {
-    document.body.removeChild(confirmModal);
+    alertContainer.appendChild(buttonContainer);
+    document.body.appendChild(alertContainer);
   }
 
-  // Adiciona o modal ao body
-  document.body.appendChild(confirmModal);
-}
-
-// Exemplo de uso:
-zuniAlertConfirm({
-  title: 'Deseja continuar?',
-  message: 'Essa ação não pode ser desfeita.',
-  confirmText: 'Sim',
-  cancelText: 'Não',
-  backgroundColor: '#28a745',
-  confirmCallback: function () {
-    alert('Você confirmou!');
-  },
-  cancelCallback: function () {
-    alert('Você cancelou!');
-  },
-});
+  // Expõe a função para o desenvolvedor
+  window.alertConfirm = createAlert;
+})();
