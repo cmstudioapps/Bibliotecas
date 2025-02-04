@@ -8,6 +8,7 @@
     alertContainer.style.left = '50%';
     alertContainer.style.transform = 'translate(-50%, -50%)';
     alertContainer.style.backgroundColor = '#fff';
+alertContainer.style.color = 'black';
     alertContainer.style.borderRadius = '10px';
     alertContainer.style.padding = '20px';
     alertContainer.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
