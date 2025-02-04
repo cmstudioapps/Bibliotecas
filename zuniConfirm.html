@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentação - zuniAlertConfirm</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1e1e1e;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #6a1b9a;
+      padding: 20px;
+      text-align: center;
+      font-size: 2em;
+      color: #fff;
+    }
+    section {
+      padding: 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .card {
+      background-color: #2c2c2c;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .button {
+      padding: 10px 20px;
+      margin: 10px 0;
+      background-color: #e91e63;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .button:hover {
+      background-color: #c2185b;
+    }
+    code {
+      background-color: #333;
+      padding: 5px 10px;
+      border-radius: 5px;
+      color: #fff;
+    }
+    pre {
+      background-color: #333;
+      padding: 15px;
+      border-radius: 5px;
+      color: #fff;
+      overflow: auto;
+      white-space: pre-wrap;
+    }
+    .example {
+      background-color: #1a1a1a;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .output {
+      padding: 20px;
+      margin-top: 20px;
+      background-color: #333;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 1.2em;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    Documentação - zuniAlertConfirm
+  </header>
+
+  <section>
+    <div class="container">
+      <h2>Bem-vindo à documentação da biblioteca zuniAlertConfirm!</h2>
+      <p>Essa biblioteca permite criar alertas de confirmação com opções personalizadas, como "Sim" e "Não". O usuário pode escolher uma opção e a ação correspondente será executada.</p>
+
+      <div class="card">
+        <h3>Como Usar</h3>
+        <p>Inclua o arquivo JavaScript da biblioteca no seu projeto e chame a função <code>zuniAlertConfirm</code> passando as opções desejadas.</p>
+
+        <pre><code>&lt;script src="caminho/para/zuniAlertConfirm.js"&gt;&lt;/script&gt;</code></pre>
+      </div>
+
+      <div class="card">
+        <h3>Exemplo de Código</h3>
+        <p>Abaixo está um exemplo de como usar a função <code>zuniAlertConfirm</code>.</p>
+
+        <pre><code>
+zuniAlertConfirm({
+  title: 'Deseja continuar?',
+  message: 'Essa ação não pode ser desfeita.',
+  confirmText: 'Sim',
+  cancelText: 'Não',
+  backgroundColor: '#28a745',
+  confirmCallback: function () {
+    alert('Você confirmou!');
+  },
+  cancelCallback: function () {
+    alert('Você cancelou!');
+  },
+});
+        </code></pre>
+      </div>
+
+      <div class="example">
+        <h3>Teste a Biblioteca</h3>
+        <button class="button" onclick="zuniAlertConfirm({
+  title: 'Deseja continuar?',
+  message: 'Essa ação não pode ser desfeita.',
+  confirmText: 'Sim',
+  cancelText: 'Não',
+  backgroundColor: '#28a745',
+  confirmCallback: function () {
+    document.getElementById('output').innerText = 'Ação confirmada!';
+  },
+  cancelCallback: function () {
+    document.getElementById('output').innerText = 'Ação cancelada!';
+  },
+});">Testar Alerta de Confirmação</button>
+
+        <div id="output" class="output"></div>
+      </div>
+
+      <div class="card">
+        <h3>Funções e Parâmetros</h3>
+        <p>Esta biblioteca possui os seguintes parâmetros:</p>
+        <ul>
+          <li><strong>title:</strong> O título do alerta (opcional).</li>
+          <li><strong>message:</strong> A mensagem a ser exibida (obrigatório).</li>
+          <li><strong>confirmText:</strong> O texto do botão "Sim" (opcional).</li>
+          <li><strong>cancelText:</strong> O texto do botão "Não" (opcional).</li>
+          <li><strong>backgroundColor:</strong> A cor de fundo do botão "Sim" (opcional).</li>
+          <li><strong>confirmCallback:</strong> Função chamada quando o usuário clica em "Sim" (opcional).</li>
+          <li><strong>cancelCallback:</strong> Função chamada quando o usuário clica em "Não" (opcional).</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Baixar a Biblioteca</h3>
+        <p>Você pode acessar a biblioteca <a href="https://github.com/cmstudioapps/Bibliotecas/blob/main/zuniConfirm.js" target="_blank" style="color: #e91e63;">aqui</a>.</p>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>
