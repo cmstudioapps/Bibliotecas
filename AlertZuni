@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentação: Carregar zuniAlert.js com Fetch</title>
+
+    <!-- Link para a fonte tecnológica -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Link para os ícones do Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background-color: #2b1a4d;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #6a2c9c;
+            padding: 20px;
+            text-align: center;
+        }
+        header h1 {
+            font-size: 2.5rem;
+            color: #fff;
+        }
+        main {
+            padding: 20px;
+        }
+        section {
+            margin-bottom: 30px;
+            border-bottom: 2px solid #6a2c9c;
+            padding-bottom: 20px;
+        }
+        h2 {
+            color: #f6a2d2;
+            font-size: 1.8rem;
+        }
+        pre {
+            background-color: #3b1e69;
+            padding: 15px;
+            border-radius: 5px;
+            color: #f6a2d2;
+            font-size: 1.1rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        footer {
+            background-color: #6a2c9c;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+        a {
+            color: #f6a2d2;
+        }
+
+        /* Adicionando estilo aos botões */
+        button {
+            background-color: #6a2c9c;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+        }
+        button:hover {
+            background-color: #9e4fa2;
+        }
+        button i {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1><i class="fas fa-cogs"></i> Documentação: Carregar zuniAlert.js com Fetch</h1>
+</header>
+
+<main>
+    <section>
+        <h2><i class="fas fa-info-circle"></i> Objetivo</h2>
+        <p>Este guia ensina como carregar o arquivo <strong>zuniAlert.js</strong> hospedado no GitHub usando a função <code>fetch</code> em JavaScript, permitindo que você utilize o script sem a necessidade de download manual.</p>
+    </section>
+
+    <section>
+        <h2><i class="fas fa-link"></i> Passo 1: Obter o Link Bruto (Raw) do Arquivo</h2>
+        <p>Para carregar o arquivo diretamente do GitHub, precisamos do link bruto (raw) do arquivo <strong>zuniAlert.js</strong>.</p>
+        <ul>
+            <li>Acesse o <a href="https://github.com/cmstudioapps/Bibliotecas/blob/main/zuniAlert.js" target="_blank"><i class="fas fa-external-link-alt"></i> link do projeto no GitHub</a>.</li>
+            <li>Clique no botão "Raw" para visualizar o arquivo sem formatação.</li>
+            <li>Copie o link da barra de endereços, que será algo como:</li>
+        </ul>
+        <pre>https://raw.githubusercontent.com/cmstudioapps/Bibliotecas/main/zuniAlert.js</pre>
+    </section>
+
+    <section>
+        <h2><i class="fas fa-code"></i> Passo 2: Usar <code>fetch</code> para Carregar o Script</h2>
+        <p>Agora, você pode usar o <code>fetch</code> para buscar o script e carregá-lo dinamicamente no seu projeto.</p>
+        <h3>Código para Carregar o Script:</h3>
+        <pre id="codeToCopy">
+fetch('https://raw.githubusercontent.com/cmstudioapps/Bibliotecas/main/zuniAlert.js')
+  .then(response => response.text())  // Pega o conteúdo do arquivo como texto
+  .then(code => {
+    // Cria uma tag script com o código do arquivo
+    const script = document.createElement('script');
+    script.textContent = code;  // Atribui o código do arquivo ao script
+    document.body.appendChild(script);  // Adiciona o script à página
+
+    // Agora você pode usar o zuniAlert normalmente
+    zuniAlert('Alerta carregado via fetch!', function() {
+      console.log('Alerta fechado!');
+    });
+  })
+  .catch(error => console.error('Erro ao carregar o script:', error));  // Lida com erros
+        </pre>
+        <p><strong>Explicação:</strong> O código acima faz uma requisição <code>fetch</code> para pegar o conteúdo do arquivo e adicionar dinamicamente a tag <code>&lt;script&gt;</code> na página.</p>
+    </section>
+
+    <section>
+        <h2><i class="fas fa-bell"></i> Passo 3: Usar o Alerta Personalizado</h2>
+        <p>Após carregar o script, você pode utilizar a função <code>zuniAlert</code> para exibir alertas personalizados.</p>
+        <pre>
+zuniAlert('Sua mensagem aqui!', function() {
+  console.log('Alerta fechado!');
+});
+        </pre>
+    </section>
+
+    <section>
+        <h2><i class="fas fa-play-circle"></i> Teste o Código</h2>
+        <button id="testButton"><i class="fas fa-play"></i> Testar Alerta</button>
+        <button id="copyButton"><i class="fas fa-copy"></i> Copiar Código</button>
+    </section>
+</main>
+<br /><br />
+<footer>
+<p>Zuni - Caio multiversando </p>
+</footer>
+
+<script>
+    // Função para copiar o código para a área de transferência
+    document.getElementById('copyButton').addEventListener('click', function() {
+        const code = document.getElementById('codeToCopy').textContent;
+        navigator.clipboard.writeText(code).then(function() {
+            alert('Código copiado com sucesso!');
+        }).catch(function(err) {
+            alert('Falha ao copiar o código: ' + err);
+        });
+    });
+
+    // Função para testar o código
+    document.getElementById('testButton').addEventListener('click', function() {
+        fetch('https://raw.githubusercontent.com/cmstudioapps/Bibliotecas/main/zuniAlert.js')
+            .then(response => response.text())
+            .then(code => {
+                const script = document.createElement('script');
+                script.textContent = code;
+                document.body.appendChild(script);
+
+                // Exemplo de uso do zuniAlert
+                zuniAlert('Alerta carregado via teste!', function() {
+                    console.log('Alerta fechado!');
+                });
+            })
+            .catch(error => console.error('Erro ao carregar o script:', error));
+    });
+</script>
+
+</body>
+</html>
