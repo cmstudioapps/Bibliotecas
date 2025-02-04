@@ -1,160 +1,206 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Documentação - zuniAlertConfirm</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #1e1e1e;
-      color: white;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background-color: #6a1b9a;
-      padding: 20px;
-      text-align: center;
-      font-size: 2em;
-      color: #fff;
-    }
-    section {
-      padding: 20px;
-    }
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .card {
-      background-color: #2c2c2c;
-      padding: 20px;
-      margin: 20px 0;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    .button {
-      padding: 10px 20px;
-      margin: 10px 0;
-      background-color: #e91e63;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    .button:hover {
-      background-color: #c2185b;
-    }
-    code {
-      background-color: #333;
-      padding: 5px 10px;
-      border-radius: 5px;
-      color: #fff;
-    }
-    pre {
-      background-color: #333;
-      padding: 15px;
-      border-radius: 5px;
-      color: #fff;
-      overflow: auto;
-      white-space: pre-wrap;
-    }
-    .example {
-      background-color: #1a1a1a;
-      padding: 15px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-    }
-    .output {
-      padding: 20px;
-      margin-top: 20px;
-      background-color: #333;
-      border-radius: 8px;
-      text-align: center;
-      font-size: 1.2em;
-      color: white;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentação da Biblioteca ZuniConfirm</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background-color: #222;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #2c3e50;
+            border-radius: 10px;
+        }
+        h1, h2 {
+            color: #9b59b6; /* Roxo */
+        }
+        h3 {
+            color: #ec407a; /* Rosa */
+        }
+        code {
+            background-color: #34495e;
+            padding: 5px;
+            border-radius: 5px;
+            color: #fff;
+        }
+        pre {
+            background-color: #34495e;
+            padding: 15px;
+            border-radius: 10px;
+            overflow-x: auto;
+            color: #fff;
+            font-size: 14px;
+        }
+        button {
+            background-color: #9b59b6; /* Roxo */
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #8e44ad;
+        }
+        .example-code {
+            background-color: #2c3e50;
+            padding: 15px;
+            border-radius: 10px;
+            color: #ec407a;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .code-container {
+            background-color: #34495e;
+            border-radius: 5px;
+            padding: 10px;
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ec407a; /* Rosa */
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            color: #fff;
+        }
+        .copy-btn:hover {
+            background-color: #e91e63;
+        }
+        .copy-btn i {
+            margin-right: 5px;
+        }
+        .icon {
+            font-size: 1.5rem;
+            color: #ec407a;
+        }
+    </style>
 </head>
 <body>
-
-  <header>
-    Documentação - zuniAlertConfirm
-  </header>
-
-  <section>
     <div class="container">
-      <h2>Bem-vindo à documentação da biblioteca zuniAlertConfirm!</h2>
-      <p>Essa biblioteca permite criar alertas de confirmação com opções personalizadas, como "Sim" e "Não". O usuário pode escolher uma opção e a ação correspondente será executada.</p>
+        <h1>Documentação da Biblioteca ZuniConfirm</h1>
+        <p>Esta biblioteca permite criar alertas customizados com dois botões, onde o desenvolvedor pode personalizar a mensagem e as funções associadas a cada botão.</p>
 
-      <div class="card">
-        <h3>Como Usar</h3>
-        <p>Inclua o arquivo JavaScript da biblioteca no seu projeto e chame a função <code>zuniAlertConfirm</code> passando as opções desejadas.</p>
+        <h2>Instruções de Uso</h2>
+        <p>Para usar a biblioteca, inclua o seguinte código no seu arquivo HTML:</p>
+        <div class="code-container">
+            <pre>&lt;script src="https://raw.githubusercontent.com/cmstudioapps/Bibliotecas/main/zuniConfirm.js"&gt;&lt;/script&gt;</pre>
+            <button class="copy-btn" onclick="copyCode(this)"><i class="icon">📋</i>Copiar Código</button>
+        </div>
 
-        <pre><code>&lt;script src="caminho/para/zuniAlertConfirm.js"&gt;&lt;/script&gt;</code></pre>
-      </div>
+        <h2>Como Carregar e Usar a Biblioteca com `fetch`</h2>
+        <p>Se você preferir carregar a biblioteca dinamicamente usando `fetch`, siga as etapas abaixo:</p>
 
-      <div class="card">
-        <h3>Exemplo de Código</h3>
-        <p>Abaixo está um exemplo de como usar a função <code>zuniAlertConfirm</code>.</p>
+        <h3>Passo 1: Carregar a Biblioteca com `fetch`</h3>
+        <p>Use a função `fetch()` para buscar a biblioteca diretamente da URL raw no GitHub e injetá-la na sua página. Aqui está como você pode fazer isso:</p>
 
-        <pre><code>
-zuniAlertConfirm({
-  title: 'Deseja continuar?',
-  message: 'Essa ação não pode ser desfeita.',
-  confirmText: 'Sim',
-  cancelText: 'Não',
-  backgroundColor: '#28a745',
-  confirmCallback: function () {
-    alert('Você confirmou!');
-  },
-  cancelCallback: function () {
-    alert('Você cancelou!');
-  },
-});
-        </code></pre>
-      </div>
+        <div class="example-code">
+            <pre>
+fetch('https://raw.githubusercontent.com/cmstudioapps/Bibliotecas/main/zuniConfirm.js')
+    .then(response => response.text())
+    .then(scriptContent => {
+        const scriptTag = document.createElement('script');
+        scriptTag.textContent = scriptContent;
+        document.body.appendChild(scriptTag);
+    })
+    .catch(error => console.error('Erro ao carregar o script:', error));
+            </pre>
+            <button class="copy-btn" onclick="copyCode(this)"><i class="icon">📋</i>Copiar Código</button>
+        </div>
 
-      <div class="example">
-        <h3>Teste a Biblioteca</h3>
-        <button class="button" onclick="zuniAlertConfirm({
-  title: 'Deseja continuar?',
-  message: 'Essa ação não pode ser desfeita.',
-  confirmText: 'Sim',
-  cancelText: 'Não',
-  backgroundColor: '#28a745',
-  confirmCallback: function () {
-    document.getElementById('output').innerText = 'Ação confirmada!';
-  },
-  cancelCallback: function () {
-    document.getElementById('output').innerText = 'Ação cancelada!';
-  },
-});">Testar Alerta de Confirmação</button>
+        <h3>Passo 2: Usar a Função `alertConfirm()`</h3>
+        <p>Depois de carregar a biblioteca com `fetch`, você pode usar a função `alertConfirm()` para criar alertas personalizados com dois botões.</p>
+        <p>Exemplo de código para mostrar o alerta:</p>
 
-        <div id="output" class="output"></div>
-      </div>
+        <div class="example-code">
+            <pre>
+function showAlert() {
+    alertConfirm(
+        'Tem certeza de que deseja continuar?', // Mensagem
+        'Sim', // Texto do primeiro botão
+        'Não', // Texto do segundo botão
+        function() { alert('Você clicou em Sim!'); }, // Função do botão 1
+        function() { alert('Você clicou em Não!'); } // Função do botão 2
+    );
+}
+            </pre>
+            <button class="copy-btn" onclick="copyCode(this)"><i class="icon">📋</i>Copiar Código</button>
+        </div>
 
-      <div class="card">
-        <h3>Funções e Parâmetros</h3>
-        <p>Esta biblioteca possui os seguintes parâmetros:</p>
-        <ul>
-          <li><strong>title:</strong> O título do alerta (opcional).</li>
-          <li><strong>message:</strong> A mensagem a ser exibida (obrigatório).</li>
-          <li><strong>confirmText:</strong> O texto do botão "Sim" (opcional).</li>
-          <li><strong>cancelText:</strong> O texto do botão "Não" (opcional).</li>
-          <li><strong>backgroundColor:</strong> A cor de fundo do botão "Sim" (opcional).</li>
-          <li><strong>confirmCallback:</strong> Função chamada quando o usuário clica em "Sim" (opcional).</li>
-          <li><strong>cancelCallback:</strong> Função chamada quando o usuário clica em "Não" (opcional).</li>
-        </ul>
-      </div>
+        <h2>Exemplo de Código Completo</h2>
+        <p>Abaixo está um exemplo completo de como usar a biblioteca com `fetch` e exibir um alerta quando o usuário clica no botão:</p>
 
-      <div class="card">
-        <h3>Baixar a Biblioteca</h3>
-        <p>Você pode acessar a biblioteca <a href="https://github.com/cmstudioapps/Bibliotecas/blob/main/zuniConfirm.js" target="_blank" style="color: #e91e63;">aqui</a>.</p>
-      </div>
+        <div class="example-code">
+            <pre>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Testando ZuniConfirm</title>
+    <script>
+        fetch('https://raw.githubusercontent.com/cmstudioapps/Bibliotecas/main/zuniConfirm.js')
+            .then(response => response.text())
+            .then(scriptContent => {
+                const scriptTag = document.createElement('script');
+                scriptTag.textContent = scriptContent;
+                document.body.appendChild(scriptTag);
+            })
+            .catch(error => console.error('Erro ao carregar o script:', error));
+        
+        function showAlert() {
+            alertConfirm(
+                'Tem certeza de que deseja continuar?', // Mensagem
+                'Sim', // Texto do primeiro botão
+                'Não', // Texto do segundo botão
+                function() { alert('Você clicou em Sim!'); }, // Função do botão 1
+                function() { alert('Você clicou em Não!'); } // Função do botão 2
+            );
+        }
+    </script>
+</head>
+<body>
+    <button onclick="showAlert()">Mostrar Alerta</button>
+</body>
+</html>
+            </pre>
+            <button class="copy-btn" onclick="copyCode(this)"><i class="icon">📋</i>Copiar Código</button>
+        </div>
+
+        <h2>Botão para Testar a Biblioteca</h2>
+        <p>Clique no botão abaixo para testar a biblioteca diretamente:</p>
+        <button onclick="showAlert()">Testar ZuniConfirm</button>
     </div>
-  </section>
 
+    <script>
+        // Função para copiar o código para a área de transferência
+        function copyCode(button) {
+            const code = button.previousElementSibling.textContent;
+            const textarea = document.createElement('textarea');
+            textarea.value = code;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            alert('Código copiado para a área de transferência!');
+        }
+    </script>
 </body>
 </html>
