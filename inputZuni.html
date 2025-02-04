@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentação - Biblioteca Prompt</title>
+
+    <!-- Fonte tecnológica -->
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+    <!-- Ícones do FontAwesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <style>
+        /* Estilo para a documentação */
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background-color: #2c003e;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #5e2a8c;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 36px;
+            color: #fff;
+        }
+
+        section {
+            padding: 20px;
+        }
+
+        h2 {
+            color: #ff0066;
+        }
+
+        .code-box {
+            background-color: #1e1e1e;
+            color: #66ff99;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 16px;
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        .button {
+            background-color: #ff0066;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .button:hover {
+            background-color: #cc0052;
+        }
+
+        .icon {
+            margin-right: 8px;
+        }
+
+        footer {
+            background-color: #5e2a8c;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1><i class="fas fa-cogs"></i> Documentação - Biblioteca Prompt</h1>
+</header>
+
+<section>
+    <h2>Visão Geral</h2>
+    <p>Esta biblioteca permite exibir um prompt personalizado em seu site, semelhante ao <code>prompt()</code> nativo, mas com um design moderno e flexível. A seguir, você encontrará um exemplo de uso e a opção de testar a biblioteca diretamente.</p>
+    
+    <h2>Exemplo de Uso</h2>
+    <div class="code-box">
+        <p>Copie e cole o código abaixo em seu projeto:</p>
+        <pre>
+fetch('https://raw.githubusercontent.com/cmstudioapps/Bibliotecas/main/inputZuni.js')
+  .then(response => response.text())
+  .then(scriptContent => {
+    // Criar um novo elemento script
+    const script = document.createElement('script');
+    script.textContent = scriptContent;
+
+    // Adicionar o script ao corpo do documento
+    document.body.appendChild(script);
+
+    // Agora você pode usar a função customPrompt
+    customPrompt('Qual o seu nome?', 'Digite seu nome...')
+      .then(response => {
+        console.log('Você digitou:', response);
+      })
+      .catch(() => {
+        console.log('O usuário cancelou');
+      });
+  })
+  .catch(error => {
+    console.error('Erro ao carregar a biblioteca:', error);
+  });
+        </pre>
+        <button class="button" onclick="copiarCodigo()"><i class="fas fa-copy icon"></i> Copiar Código</button>
+    </div>
+
+    <h2>Testar a Biblioteca</h2>
+    <p>Use o botão abaixo para testar a biblioteca diretamente neste site:</p>
+    <button class="button" onclick="mostrarPrompt()">Testar Prompt</button>
+
+    <div id="output" style="margin-top: 20px; color: #66ff99;"></div>
+</section>
+
+<footer>
+    <p>&copy; 2025 CM Studio | Todos os direitos reservados.</p>
+</footer>
+
+<script>
+    // Função para copiar o código para a área de transferência
+    function copiarCodigo() {
+        const codigo = document.querySelector('.code-box pre').innerText;
+        const textoArea = document.createElement('textarea');
+        textoArea.value = codigo;
+        document.body.appendChild(textoArea);
+        textoArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textoArea);
+        alert('Código copiado com sucesso!');
+    }
+
+    // Função para testar o prompt
+    function mostrarPrompt() {
+        // Carregar e adicionar o script da biblioteca
+        fetch('https://raw.githubusercontent.com/cmstudioapps/Bibliotecas/main/inputZuni.js')
+            .then(response => response.text())
+            .then(scriptContent => {
+                const script = document.createElement('script');
+                script.textContent = scriptContent;
+                document.body.appendChild(script);
+
+                // Após o script ser carregado, usar a função customPrompt
+                customPrompt('Qual o seu nome?', 'Digite seu nome...')
+                    .then(response => {
+                        document.getElementById('output').innerText = 'Você digitou: ' + response;
+                    })
+                    .catch(() => {
+                        document.getElementById('output').innerText = 'O usuário cancelou';
+                    });
+            })
+            .catch(error => {
+                console.error('Erro ao carregar o script:', error);
+            });
+    }
+</script>
+
+</body>
+</html>
