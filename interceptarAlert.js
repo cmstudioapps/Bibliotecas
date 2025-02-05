@@ -23,10 +23,22 @@
   `;
   document.body.appendChild(promptContainer);
 
+  // Criar o container do confirm customizado
+  const confirmContainer = document.createElement("div");
+  confirmContainer.id = "custom-confirm";
+  confirmContainer.innerHTML = `
+    <div class="alert-box">
+      <p id="confirm-message"></p>
+      <button id="confirm-ok">OK</button>
+      <button id="confirm-cancel">Cancelar</button>
+    </div>
+  `;
+  document.body.appendChild(confirmContainer);
+
   // Adicionar estilos
   const styles = document.createElement("style");
   styles.innerHTML = `
-    #custom-alert, #custom-prompt {
+    #custom-alert, #custom-prompt, #custom-confirm {
       position: fixed;
       top: 0;
       left: 0;
@@ -46,7 +58,7 @@
       text-align: center;
       box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     }
-    #alert-ok, #prompt-ok, #prompt-cancel {
+    #alert-ok, #prompt-ok, #prompt-cancel, #confirm-ok, #confirm-cancel {
       margin-top: 10px;
       padding: 5px 15px;
       border: none;
@@ -55,7 +67,7 @@
       border-radius: 3px;
       cursor: pointer;
     }
-    #alert-ok:hover, #prompt-ok:hover, #prompt-cancel:hover {
+    #alert-ok:hover, #prompt-ok:hover, #prompt-cancel:hover, #confirm-ok:hover, #confirm-cancel:hover {
       background: darkblue;
     }
     #prompt-input {
@@ -86,10 +98,28 @@
         resolve(promptInput.value);
         promptContainer.style.display = "none";
       });
-      
+
       document.getElementById("prompt-cancel").addEventListener("click", function () {
         resolve(null);
         promptContainer.style.display = "none";
+      });
+    });
+  };
+
+  // Intercepta o confirm padrão
+  window.confirm = function (message) {
+    document.getElementById("confirm-message").innerText = message;
+    confirmContainer.style.display = "flex";
+
+    return new Promise((resolve) => {
+      document.getElementById("confirm-ok").addEventListener("click", function () {
+        resolve(true);
+        confirmContainer.style.display = "none";
+      });
+
+      document.getElementById("confirm-cancel").addEventListener("click", function () {
+        resolve(false);
+        confirmContainer.style.display = "none";
       });
     });
   };
