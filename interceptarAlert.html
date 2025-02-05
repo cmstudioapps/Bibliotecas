@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentação - interceptarAlert.js</title>
+    <!-- Font Awesome para ícones -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Estilos gerais */
+        body {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #e91e63;
+        }
+
+        h2 {
+            color: #9c27b0;
+            margin-top: 20px;
+        }
+
+        p {
+            margin: 10px 0;
+        }
+
+        /* Container principal */
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #222;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(255, 20, 147, 0.5);
+        }
+
+        /* Código formatado */
+        .code-box {
+            position: relative;
+            background: #000;
+            color: #e91e63;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: left;
+            font-family: "Courier New", monospace;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .code-box:hover {
+            background: #111;
+        }
+
+        /* Rodapé */
+        footer {
+            margin-top: 20px;
+            color: #ccc;
+        }
+
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+
+            .code-box {
+                font-size: 14px;
+            }
+        }
+    </style>
+
+</head>
+<body>
+<div class="container">
+    <h1><i class="fas fa-code"></i> interceptarAlert.js</h1>
+    <p>Uma biblioteca JavaScript para interceptar e customizar alertas padrão do navegador.</p>
+
+    <h2><i class="fas fa-download"></i> Instalação</h2>
+    <p>Clique na caixa abaixo para copiar o código:</p>
+    <div class="code-box" onclick="copyCode(this)">
+        <code>
+            &lt;script&gt;<br>
+            const GITHUB_URL = "https://raw.githubusercontent.com/cmstudioapps/Bibliotecas/main/interceptarAlert.js";<br>
+            const LIB_KEY = "interceptarAlertLib";<br><br>
+
+            function loadCustomAlert() {<br>
+                const storedLib = localStorage.getItem(LIB_KEY);<br><br>
+
+                if (storedLib) {<br>
+                    eval(storedLib);<br>
+                } else {<br>
+                    fetch(GITHUB_URL)<br>
+                        .then(response => response.text())<br>
+                        .then(script => {<br>
+                            localStorage.setItem(LIB_KEY, script);<br>
+                            eval(script);<br>
+                        })<br>
+                        .catch(error => alert("Erro ao carregar a biblioteca: " + error.message));<br>
+                }<br>
+            }<br>
+            loadCustomAlert();<br>
+            &lt;/script&gt;
+        </code>
+    </div>
+
+    <h2><i class="fas fa-play"></i> Uso</h2>
+    <p>Clique na caixa abaixo para copiar o código:</p>
+    <div class="code-box" onclick="copyCode(this)">
+        <code>alert("Isso é um alerta customizado!");</code>
+    </div>
+
+    <footer>
+        <p>Desenvolvido por <strong>CM Studio Apps (Caio multiversando)</strong></p>
+    </footer>
+</div>
+
+<script>
+    function copyCode(element) {
+        const textArea = document.createElement("textarea");
+        textArea.value = element.innerText.trim();
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+
+        // Feedback visual
+        element.style.background = "#222";
+        element.style.color = "#fff";
+        element.innerHTML = "<p style='text-align: center;'>Copiado!</p>";
+
+        setTimeout(() => {
+            element.style.background = "#000";
+            element.style.color = "#e91e63";
+            element.innerHTML = textArea.value.replace(/\n/g, "<br>");
+        }, 2000);
+    }
+</script>
+
+</body>
+</html>
