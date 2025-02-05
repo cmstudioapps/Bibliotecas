@@ -83,12 +83,15 @@
   // Intercepta o alert padrão
   window.alert = function (message) {
     return new Promise((resolve) => {
-      document.getElementById("alert-message").innerText = message;
+      const alertMessage = document.getElementById("alert-message");
+      if (alertMessage) {
+        alertMessage.textContent = message || "Mensagem não definida!";
+      }
       alertContainer.style.display = "flex";
 
       document.getElementById("alert-ok").onclick = function () {
         alertContainer.style.display = "none";
-        resolve(); // Permite que a execução continue após o clique no botão OK
+        resolve(); // Aguarda o clique no botão OK
       };
     });
   };
@@ -96,9 +99,12 @@
   // Intercepta o prompt padrão
   window.prompt = function (message, defaultValue = "") {
     return new Promise((resolve) => {
-      document.getElementById("prompt-message").innerText = message;
+      const promptMessage = document.getElementById("prompt-message");
       const promptInput = document.getElementById("prompt-input");
-      promptInput.value = defaultValue;
+
+      if (promptMessage) promptMessage.textContent = message || "Mensagem não definida!";
+      if (promptInput) promptInput.value = defaultValue;
+
       promptContainer.style.display = "flex";
 
       document.getElementById("prompt-ok").onclick = function () {
@@ -116,7 +122,9 @@
   // Intercepta o confirm padrão
   window.confirm = function (message) {
     return new Promise((resolve) => {
-      document.getElementById("confirm-message").innerText = message;
+      const confirmMessage = document.getElementById("confirm-message");
+      if (confirmMessage) confirmMessage.textContent = message || "Mensagem não definida!";
+
       confirmContainer.style.display = "flex";
 
       document.getElementById("confirm-ok").onclick = function () {
