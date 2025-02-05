@@ -12,6 +12,8 @@ function customPrompt(message, placeholder = '', inputType = 'text') {
     promptContainer.style.justifyContent = 'center';
     promptContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
     promptContainer.style.zIndex = '1000';
+    promptContainer.style.opacity = '0';
+    promptContainer.style.transition = 'opacity 0.3s ease'; // Animação de entrada
 
     // Criação da caixa do prompt
     const promptBox = document.createElement('div');
@@ -21,6 +23,8 @@ function customPrompt(message, placeholder = '', inputType = 'text') {
     promptBox.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
     promptBox.style.textAlign = 'center';
     promptBox.style.minWidth = '300px';
+    promptBox.style.transform = 'scale(0.9)';
+    promptBox.style.transition = 'transform 0.3s ease'; // Animação de escala
 
     // Mensagem do prompt
     const promptMessage = document.createElement('p');
@@ -29,7 +33,7 @@ function customPrompt(message, placeholder = '', inputType = 'text') {
 
     // Campo de entrada (input)
     const inputField = document.createElement('input');
-    inputField.type = inputType; // Tipo do input customizado
+    inputField.type = inputType;
     inputField.placeholder = placeholder;
     inputField.style.width = '100%';
     inputField.style.marginTop = '10px';
@@ -48,10 +52,7 @@ function customPrompt(message, placeholder = '', inputType = 'text') {
     confirmButton.style.border = 'none';
     confirmButton.style.borderRadius = '4px';
     confirmButton.style.cursor = 'pointer';
-    confirmButton.addEventListener('click', () => {
-      resolve(inputField.value);
-      document.body.removeChild(promptContainer);
-    });
+    confirmButton.addEventListener('click', () => fecharPrompt(resolve, inputField.value));
     promptBox.appendChild(confirmButton);
 
     // Botão de cancelamento
@@ -65,13 +66,26 @@ function customPrompt(message, placeholder = '', inputType = 'text') {
     cancelButton.style.border = 'none';
     cancelButton.style.borderRadius = '4px';
     cancelButton.style.cursor = 'pointer';
-    cancelButton.addEventListener('click', () => {
-      reject();
-      document.body.removeChild(promptContainer);
-    });
+    cancelButton.addEventListener('click', () => fecharPrompt(reject));
     promptBox.appendChild(cancelButton);
 
     promptContainer.appendChild(promptBox);
     document.body.appendChild(promptContainer);
+
+    // Ativar a animação de entrada
+    setTimeout(() => {
+      promptContainer.style.opacity = '1';
+      promptBox.style.transform = 'scale(1)';
+    }, 10);
+
+    // Função para fechar o prompt com animação
+    function fecharPrompt(callback, value = null) {
+      promptContainer.style.opacity = '0';
+      promptBox.style.transform = 'scale(0.9)';
+      setTimeout(() => {
+        document.body.removeChild(promptContainer);
+        callback(value);
+      }, 300); // Tempo da transição
+    }
   });
 }
