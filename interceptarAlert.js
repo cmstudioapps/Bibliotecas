@@ -82,50 +82,52 @@
 
   // Intercepta o alert padrão
   window.alert = function (message) {
-    document.getElementById("alert-message").innerText = message;
-    alertContainer.style.display = "flex";
+    return new Promise((resolve) => {
+      document.getElementById("alert-message").innerText = message;
+      alertContainer.style.display = "flex";
+
+      document.getElementById("alert-ok").onclick = function () {
+        alertContainer.style.display = "none";
+        resolve(); // Permite que a execução continue após o clique no botão OK
+      };
+    });
   };
 
   // Intercepta o prompt padrão
-  window.prompt = function (message, defaultValue) {
-    document.getElementById("prompt-message").innerText = message;
-    const promptInput = document.getElementById("prompt-input");
-    promptInput.value = defaultValue || "";
-    promptContainer.style.display = "flex";
-
+  window.prompt = function (message, defaultValue = "") {
     return new Promise((resolve) => {
-      document.getElementById("prompt-ok").addEventListener("click", function () {
+      document.getElementById("prompt-message").innerText = message;
+      const promptInput = document.getElementById("prompt-input");
+      promptInput.value = defaultValue;
+      promptContainer.style.display = "flex";
+
+      document.getElementById("prompt-ok").onclick = function () {
         resolve(promptInput.value);
         promptContainer.style.display = "none";
-      });
+      };
 
-      document.getElementById("prompt-cancel").addEventListener("click", function () {
+      document.getElementById("prompt-cancel").onclick = function () {
         resolve(null);
         promptContainer.style.display = "none";
-      });
+      };
     });
   };
 
   // Intercepta o confirm padrão
   window.confirm = function (message) {
-    document.getElementById("confirm-message").innerText = message;
-    confirmContainer.style.display = "flex";
-
     return new Promise((resolve) => {
-      document.getElementById("confirm-ok").addEventListener("click", function () {
+      document.getElementById("confirm-message").innerText = message;
+      confirmContainer.style.display = "flex";
+
+      document.getElementById("confirm-ok").onclick = function () {
         resolve(true);
         confirmContainer.style.display = "none";
-      });
+      };
 
-      document.getElementById("confirm-cancel").addEventListener("click", function () {
+      document.getElementById("confirm-cancel").onclick = function () {
         resolve(false);
         confirmContainer.style.display = "none";
-      });
+      };
     });
   };
-
-  // Fecha o alerta ao clicar no botão OK
-  document.getElementById("alert-ok").addEventListener("click", function () {
-    alertContainer.style.display = "none";
-  });
 })();
