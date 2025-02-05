@@ -104,23 +104,24 @@
     <p>Clique na caixa abaixo para copiar o código:</p>
     <div class="code-box" onclick="copyCode(this)">
         <code>
-            &lt;script&gt;<br>
+            &lt;script type="module"&gt;<br>
             const GITHUB_URL = "https://raw.githubusercontent.com/cmstudioapps/Bibliotecas/main/interceptarAlert.js";<br>
             const LIB_KEY = "interceptarAlertLib";<br><br>
 
-            function loadCustomAlert() {<br>
+            async function loadCustomAlert() {<br>
                 const storedLib = localStorage.getItem(LIB_KEY);<br><br>
 
                 if (storedLib) {<br>
                     eval(storedLib);<br>
                 } else {<br>
-                    fetch(GITHUB_URL)<br>
-                        .then(response => response.text())<br>
-                        .then(script => {<br>
-                            localStorage.setItem(LIB_KEY, script);<br>
-                            eval(script);<br>
-                        })<br>
-                        .catch(error => alert("Erro ao carregar a biblioteca: " + error.message));<br>
+                    try {<br>
+                        const response = await fetch(GITHUB_URL);<br>
+                        const script = await response.text();<br>
+                        localStorage.setItem(LIB_KEY, script);<br>
+                        eval(script);<br>
+                    } catch (error) {<br>
+                        alert("Erro ao carregar a biblioteca: " + error.message);<br>
+                    }<br>
                 }<br>
             }<br>
             loadCustomAlert();<br>
