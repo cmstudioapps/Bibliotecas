@@ -12,7 +12,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
     <style>
-        /* Estilo para a documentação */
         body {
             font-family: 'Share Tech Mono', monospace;
             background-color: #2c003e;
@@ -93,8 +92,8 @@
 
 <section>
     <h2>Visão Geral</h2>
-    <p>Esta biblioteca permite exibir um prompt personalizado em seu site, semelhante ao <code>prompt()</code> nativo, mas com um design moderno e flexível. A seguir, você encontrará um exemplo de uso e a opção de testar a biblioteca diretamente.</p>
-    
+    <p>Esta biblioteca permite exibir um prompt personalizado em seu site, semelhante ao <code>prompt()</code> nativo, mas com um design moderno e flexível. Agora, é possível definir o tipo do input (como <code>text</code>, <code>email</code>, <code>number</code>, entre outros).</p>
+
     <h2>Exemplo de Uso</h2>
     <div class="code-box">
         <p>Copie e cole o código abaixo em seu projeto:</p>
@@ -110,9 +109,19 @@ fetch('https://raw.githubusercontent.com/cmstudioapps/Bibliotecas/main/inputZuni
     document.body.appendChild(script);
 
     // Agora você pode usar a função customPrompt
+    // Exemplo 1: Input padrão (text)
     customPrompt('Qual o seu nome?', 'Digite seu nome...')
       .then(response => {
         console.log('Você digitou:', response);
+      })
+      .catch(() => {
+        console.log('O usuário cancelou');
+      });
+
+    // Exemplo 2: Input de e-mail
+    customPrompt('Qual o seu e-mail?', 'exemplo@dominio.com', 'email')
+      .then(response => {
+        console.log('E-mail digitado:', response);
       })
       .catch(() => {
         console.log('O usuário cancelou');
@@ -124,6 +133,14 @@ fetch('https://raw.githubusercontent.com/cmstudioapps/Bibliotecas/main/inputZuni
         </pre>
         <button class="button" onclick="copiarCodigo()"><i class="fas fa-copy icon"></i> Copiar Código</button>
     </div>
+
+    <h2>Parâmetros da Função <code>customPrompt()</code></h2>
+    <p>A função <code>customPrompt()</code> aceita até três parâmetros:</p>
+    <ul>
+        <li><strong>Mensagem (obrigatório):</strong> Texto que será exibido no prompt.</li>
+        <li><strong>Placeholder (opcional):</strong> Texto que aparece dentro do campo antes do usuário digitar.</li>
+        <li><strong>Tipo de Input (opcional):</strong> Define o tipo do campo. Pode ser <code>text</code>, <code>email</code>, <code>number</code>, <code>password</code>, etc. O padrão é <code>text</code>.</li>
+    </ul>
 
     <h2>Testar a Biblioteca</h2>
     <p>Use o botão abaixo para testar a biblioteca diretamente neste site:</p>
@@ -159,8 +176,8 @@ fetch('https://raw.githubusercontent.com/cmstudioapps/Bibliotecas/main/inputZuni
                 script.textContent = scriptContent;
                 document.body.appendChild(script);
 
-                // Após o script ser carregado, usar a função customPrompt
-                customPrompt('Qual o seu nome?', 'Digite seu nome...')
+                // Após o script ser carregado, usar a função customPrompt com input de e-mail
+                customPrompt('Qual o seu e-mail?', 'exemplo@dominio.com', 'email')
                     .then(response => {
                         document.getElementById('output').innerText = 'Você digitou: ' + response;
                     })
