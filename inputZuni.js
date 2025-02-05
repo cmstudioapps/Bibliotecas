@@ -1,124 +1,77 @@
+function customPrompt(message, placeholder = '', inputType = 'text') {
+  return new Promise((resolve, reject) => {
+    // Criação do contêiner do prompt
+    const promptContainer = document.createElement('div');
+    promptContainer.style.position = 'fixed';
+    promptContainer.style.top = '0';
+    promptContainer.style.left = '0';
+    promptContainer.style.width = '100%';
+    promptContainer.style.height = '100%';
+    promptContainer.style.display = 'flex';
+    promptContainer.style.alignItems = 'center';
+    promptContainer.style.justifyContent = 'center';
+    promptContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    promptContainer.style.zIndex = '1000';
 
-// promptLibrary.js
-(function() {
-    const promptOverlay = document.createElement('div');
-    promptOverlay.classList.add('prompt-overlay');
-
+    // Criação da caixa do prompt
     const promptBox = document.createElement('div');
-    promptBox.classList.add('prompt-box');
+    promptBox.style.backgroundColor = '#fff';
+    promptBox.style.padding = '20px';
+    promptBox.style.borderRadius = '8px';
+    promptBox.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+    promptBox.style.textAlign = 'center';
+    promptBox.style.minWidth = '300px';
 
-    const input = document.createElement('input');
-    input.type = 'text';
+    // Mensagem do prompt
+    const promptMessage = document.createElement('p');
+    promptMessage.textContent = message;
+    promptBox.appendChild(promptMessage);
 
-    const buttonContainer = document.createElement('div');
-    buttonContainer.classList.add('prompt-buttons');
+    // Campo de entrada (input)
+    const inputField = document.createElement('input');
+    inputField.type = inputType; // Tipo do input customizado
+    inputField.placeholder = placeholder;
+    inputField.style.width = '100%';
+    inputField.style.marginTop = '10px';
+    inputField.style.padding = '10px';
+    inputField.style.border = '1px solid #ccc';
+    inputField.style.borderRadius = '4px';
+    promptBox.appendChild(inputField);
 
-    const cancelButton = document.createElement('button');
-    cancelButton.textContent = 'Cancelar';
-
+    // Botão de confirmação
     const confirmButton = document.createElement('button');
     confirmButton.textContent = 'Confirmar';
+    confirmButton.style.marginTop = '15px';
+    confirmButton.style.padding = '10px 20px';
+    confirmButton.style.backgroundColor = '#007BFF';
+    confirmButton.style.color = '#fff';
+    confirmButton.style.border = 'none';
+    confirmButton.style.borderRadius = '4px';
+    confirmButton.style.cursor = 'pointer';
+    confirmButton.addEventListener('click', () => {
+      resolve(inputField.value);
+      document.body.removeChild(promptContainer);
+    });
+    promptBox.appendChild(confirmButton);
 
-    buttonContainer.append(cancelButton, confirmButton);
-    promptBox.append(input, buttonContainer);
-    promptOverlay.appendChild(promptBox);
-    document.body.appendChild(promptOverlay);
+    // Botão de cancelamento
+    const cancelButton = document.createElement('button');
+    cancelButton.textContent = 'Cancelar';
+    cancelButton.style.marginTop = '15px';
+    cancelButton.style.marginLeft = '10px';
+    cancelButton.style.padding = '10px 20px';
+    cancelButton.style.backgroundColor = '#dc3545';
+    cancelButton.style.color = '#fff';
+    cancelButton.style.border = 'none';
+    cancelButton.style.borderRadius = '4px';
+    cancelButton.style.cursor = 'pointer';
+    cancelButton.addEventListener('click', () => {
+      reject();
+      document.body.removeChild(promptContainer);
+    });
+    promptBox.appendChild(cancelButton);
 
-    let resolveCallback;
-    let rejectCallback;
-
-    // Estilos personalizados
-    const style = document.createElement('style');
-    style.innerHTML = `
-        .prompt-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .prompt-box {
-            background: linear-gradient(to right, #6a1b9a, #2196f3, #e91e63);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 300px;
-            color: white;
-        }
-
-        .prompt-box input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 2px solid #fff;
-            border-radius: 5px;
-            background-color: transparent;
-            color: white;
-            font-size: 16px;
-        }
-
-        .prompt-buttons {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-        }
-
-        .prompt-buttons button {
-            padding: 10px;
-            margin: 5px;
-            border: none;
-            background: white;
-            color: #6a1b9a;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .prompt-buttons button:hover {
-            background: #e91e63;
-            color: white;
-        }
-
-        .prompt-buttons button:focus {
-            outline: none;
-        }
-    `;
-    document.head.appendChild(style);
-
-    // Função para exibir o prompt
-    window.customPrompt = function(message = 'Digite algo...', placeholder = '') {
-        return new Promise((resolve, reject) => {
-            input.placeholder = placeholder;
-            promptOverlay.style.display = 'flex';
-            input.value = ''; // Limpa o valor antigo
-
-            resolveCallback = resolve;
-            rejectCallback = reject;
-
-            // Define o texto do prompt
-            promptBox.insertBefore(document.createTextNode(message), input);
-
-            // Ao clicar em "Confirmar"
-            confirmButton.onclick = function() {
-                promptOverlay.style.display = 'none';
-                resolveCallback(input.value);
-            };
-
-            // Ao clicar em "Cancelar"
-            cancelButton.onclick = function() {
-                promptOverlay.style.display = 'none';
-                rejectCallback();
-            };
-        });
-    };
-})();
+    promptContainer.appendChild(promptBox);
+    document.body.appendChild(promptContainer);
+  });
+}
