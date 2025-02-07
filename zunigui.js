@@ -1,4 +1,24 @@
-// zunigui.js
+
+/*
+zunigui.js
+e um conjunto de módulos inicialmente feita pela CM Studio 
+
+a zunigui.js apenas junta esses módulos
+em uma biblioteca para facilitar o uso
+
+site oficial das bibliotecas
+alert zuni
+https://caiolibs.vercel.app/AlertZuni.html
+
+zuni confirm
+https://caiolibs.vercel.app/zuniConfirm.html
+ input zuni
+https://caiolibs.vercel.app/inputZuni.html
+
+ 
+
+*/
+
 function customPrompt(message, placeholder = '', inputType = 'text') {
   return new Promise((resolve, reject) => {
     // Criação do contêiner do prompt
@@ -78,7 +98,6 @@ function zuniAlert(mensagem, callbackOK) {
     <div class="zuni-alert-box">
       <div class="zuni-alert-message">${mensagem}</div>
       <button class="zuni-alert-ok">OK</button>
-      <div class="zuni-watermark">Zuni</div>
     </div>
   `;
 
@@ -179,4 +198,3 @@ window.confirm = function (message) {
     );
   });
 };
-                     
