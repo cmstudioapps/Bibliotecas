@@ -51,10 +51,12 @@ class DarkZuni {
 
   enableDarkMode() {
     this.applyDarkStylesToAllElements();
+    this.applyDarkBackgroundToBody();
   }
 
   disableDarkMode() {
     this.resetElementStyles();
+    this.resetBodyBackground();
   }
 
   applyDarkStylesToAllElements() {
@@ -73,6 +75,12 @@ class DarkZuni {
     });
   }
 
+  applyDarkBackgroundToBody() {
+    const bodyComputedStyle = window.getComputedStyle(document.body);
+    document.body.dataset.originalBackground = bodyComputedStyle.backgroundColor;
+    document.body.style.backgroundColor = '#121212'; // Fundo escuro
+  }
+
   resetElementStyles() {
     const allElements = document.querySelectorAll('*');
     allElements.forEach(el => {
@@ -84,6 +92,12 @@ class DarkZuni {
       }
       el.style.borderColor = '';
     });
+  }
+
+  resetBodyBackground() {
+    if (document.body.dataset.originalBackground) {
+      document.body.style.backgroundColor = document.body.dataset.originalBackground;
+    }
   }
 }
 
