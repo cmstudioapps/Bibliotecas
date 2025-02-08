@@ -86,6 +86,10 @@ class DarkZuni {
       offsetX = touch.clientX - button.getBoundingClientRect().left;
       offsetY = touch.clientY - button.getBoundingClientRect().top;
       button.style.transition = 'none';
+
+      // Remove as propriedades 'bottom' e 'right' para que o posicionamento seja feito apenas com 'left' e 'top'
+      button.style.bottom = 'auto';
+      button.style.right = 'auto';
     }
 
     function moveButton(e) {
