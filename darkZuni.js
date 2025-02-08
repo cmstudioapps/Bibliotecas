@@ -21,24 +21,34 @@ class DarkZuni {
     const button = document.createElement('button');
     button.id = 'darkToggleButton';
     button.setAttribute('data-ignore-dark', 'true');
-    button.innerText = '🌓 Tema';
+    button.innerText = '🌓';
 
     button.style.cssText = `
       position: fixed;
-      top: auto;
       bottom: 10px;
-      left: auto;
       right: 10px;
-      z-index: 1000;
-      padding: 10px 15px;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: bold;
       background-color: #333;
       color: white;
       border: none;
-      border-radius: 50px;
-      cursor: pointer;
+      border-radius: 50%;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+      z-index: 1000;
     `;
 
-    button.addEventListener('click', () => this.toggleDarkMode(button));
+    button.addEventListener('click', (e) => {
+      if (!button.classList.contains('dragging')) {
+        this.toggleDarkMode(button);
+      }
+    });
 
     document.body.appendChild(button);
     this.enableButtonDrag(button);
@@ -49,96 +59,20 @@ class DarkZuni {
     if (isDarkMode) {
       this.enableDarkMode();
       localStorage.setItem('darkZuniTheme', 'dark');
-      button.innerText = '🌞 Tema Claro';
+      button.innerText = '🌞';
     } else {
       this.disableDarkMode();
       localStorage.setItem('darkZuniTheme', 'light');
-      button.innerText = '🌓 Tema Escuro';
+      button.innerText = '🌓';
     }
   }
 
   enableDarkMode() {
-    this.applyDarkStylesToAllElements();
-    this.applyDarkBackgroundToBody();
-    this.startMutationObserver();
+    document.body.classList.add(this.darkClass);
   }
 
   disableDarkMode() {
-    this.resetElementStyles();
-    this.resetBodyBackground();
-    this.stopMutationObserver();
-  }
-
-  _applyDarkStylesToElement(el) {
-    if (el.hasAttribute('data-ignore-dark')) return;
-    const computedStyle = window.getComputedStyle(el);
-
-    if (!el.dataset.originalBackground) el.dataset.originalBackground = computedStyle.backgroundColor;
-    if (!el.dataset.originalColor) el.dataset.originalColor = computedStyle.color;
-    if (!el.dataset.originalBorderColor) el.dataset.originalBorderColor = computedStyle.borderColor;
-    if (!el.dataset.originalBoxShadow) el.dataset.originalBoxShadow = computedStyle.boxShadow;
-    if (!el.dataset.originalBackgroundImage) el.dataset.originalBackgroundImage = computedStyle.backgroundImage;
-
-    el.style.backgroundColor = '#121212';
-    el.style.color = '#FFF';
-
-    if (computedStyle.borderColor !== 'transparent') el.style.borderColor = '#FFF';
-    if (computedStyle.boxShadow && computedStyle.boxShadow !== 'none') el.style.boxShadow = '0 0 5px 2px rgba(255, 255, 255, 0.3)';
-    if (computedStyle.backgroundImage !== 'none') el.style.backgroundImage = 'none';
-  }
-
-  applyDarkStylesToAllElements() {
-    document.querySelectorAll('*').forEach(el => this._applyDarkStylesToElement(el));
-  }
-
-  applyDarkStylesToElementAndDescendants(element) {
-    if (element.nodeType !== Node.ELEMENT_NODE) return;
-    this._applyDarkStylesToElement(element);
-    element.querySelectorAll('*').forEach(el => this._applyDarkStylesToElement(el));
-  }
-
-  applyDarkBackgroundToBody() {
-    const bodyComputedStyle = window.getComputedStyle(document.body);
-    if (!document.body.dataset.originalBackground) document.body.dataset.originalBackground = bodyComputedStyle.backgroundColor;
-    if (!document.body.dataset.originalBackgroundImage) document.body.dataset.originalBackgroundImage = bodyComputedStyle.backgroundImage;
-    document.body.style.backgroundColor = '#121212';
-    document.body.style.backgroundImage = 'none';
-  }
-
-  resetElementStyles() {
-    document.querySelectorAll('*').forEach(el => {
-      if (el.dataset.originalBackground) el.style.backgroundColor = el.dataset.originalBackground;
-      if (el.dataset.originalColor) el.style.color = el.dataset.originalColor;
-      if (el.dataset.originalBorderColor) el.style.borderColor = el.dataset.originalBorderColor;
-      if (el.dataset.originalBoxShadow) el.style.boxShadow = el.dataset.originalBoxShadow;
-      if (el.dataset.originalBackgroundImage) el.style.backgroundImage = el.dataset.originalBackgroundImage;
-    });
-  }
-
-  resetBodyBackground() {
-    if (document.body.dataset.originalBackground) document.body.style.backgroundColor = document.body.dataset.originalBackground;
-    if (document.body.dataset.originalBackgroundImage) document.body.style.backgroundImage = document.body.dataset.originalBackgroundImage;
-  }
-
-  startMutationObserver() {
-    if (this.mutationObserver) return;
-    this.mutationObserver = new MutationObserver(mutations => {
-      mutations.forEach(mutation => {
-        if (mutation.type === 'childList' && mutation.addedNodes.length) {
-          mutation.addedNodes.forEach(node => {
-            if (node.nodeType === Node.ELEMENT_NODE) this.applyDarkStylesToElementAndDescendants(node);
-          });
-        }
-      });
-    });
-    this.mutationObserver.observe(document.body, { childList: true, subtree: true });
-  }
-
-  stopMutationObserver() {
-    if (this.mutationObserver) {
-      this.mutationObserver.disconnect();
-      this.mutationObserver = null;
-    }
+    document.body.classList.remove(this.darkClass);
   }
 
   enableButtonDrag(button) {
@@ -147,6 +81,7 @@ class DarkZuni {
 
     function startDrag(e) {
       isDragging = true;
+      button.classList.add('dragging');
       let touch = e.touches ? e.touches[0] : e;
       offsetX = touch.clientX - button.getBoundingClientRect().left;
       offsetY = touch.clientY - button.getBoundingClientRect().top;
@@ -174,6 +109,7 @@ class DarkZuni {
 
     function endDrag() {
       isDragging = false;
+      button.classList.remove('dragging');
       button.style.transition = 'left 0.1s ease, top 0.1s ease';
     }
 
