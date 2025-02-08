@@ -188,31 +188,48 @@ class DarkZuni {
   }
 
   enableButtonDrag(button) {
-    let isDragging = false;
-    let offsetX = 0, offsetY = 0;
+  let isDragging = false;
+  let offsetX = 0, offsetY = 0;
 
-    // Inicia o arraste
-    button.addEventListener('mousedown', (e) => {
-      isDragging = true;
-      offsetX = e.clientX - button.getBoundingClientRect().left;
-      offsetY = e.clientY - button.getBoundingClientRect().top;
-      button.style.transition = 'none'; // Remove transição durante o arraste
-    });
+  // Inicia o arraste (mouse e touch)
+  const dragStart = (e) => {
+    isDragging = true;
+    // Usa e.touches[0] se for um evento de toque
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    offsetX = clientX - button.getBoundingClientRect().left;
+    offsetY = clientY - button.getBoundingClientRect().top;
+    button.style.transition = 'none'; // Remove a transição durante o arraste
+  };
 
-    // Move o botão
-    document.addEventListener('mousemove', (e) => {
-      if (isDragging) {
-        button.style.left = `${e.clientX - offsetX}px`;
-        button.style.top = `${e.clientY - offsetY}px`;
-      }
-    });
+  // Move o botão (mouse e touch)
+  const dragMove = (e) => {
+    if (!isDragging) return;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    button.style.left = `${clientX - offsetX}px`;
+    button.style.top = `${clientY - offsetY}px`;
+    // Impede o scroll durante o toque
+    if (e.touches) {
+      e.preventDefault();
+    }
+  };
 
-    // Finaliza o arraste
-    document.addEventListener('mouseup', () => {
-      isDragging = false;
-      button.style.transition = 'left 0.1s ease, top 0.1s ease';
-    });
-  }
+  // Finaliza o arraste (mouse e touch)
+  const dragEnd = () => {
+    isDragging = false;
+    button.style.transition = 'left 0.1s ease, top 0.1s ease';
+  };
+
+  // Eventos para mouse
+  button.addEventListener('mousedown', dragStart);
+  document.addEventListener('mousemove', dragMove);
+  document.addEventListener('mouseup', dragEnd);
+
+  // Eventos para toque (touch)
+  button.addEventListener('touchstart', dragStart, { passive: false });
+  document.addEventListener('touchmove', dragMove, { passive: false });
+  document.addEventListener('touchend', dragEnd);
 }
 
 // Ativa a biblioteca
