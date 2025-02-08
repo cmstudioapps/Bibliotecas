@@ -21,8 +21,9 @@ class DarkZuni {
     button.innerText = '🌓 Tema';
     button.style.cssText = `
       position: fixed;
-      bottom: 20px;
-      right: 20px;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
       z-index: 1000;
       padding: 10px 15px;
       background-color: #333;
@@ -32,8 +33,14 @@ class DarkZuni {
       cursor: pointer;
     `;
 
+    // Função para alternar o tema
     button.addEventListener('click', () => this.toggleDarkMode(button));
+
+    // Adiciona o botão ao corpo do documento
     document.body.appendChild(button);
+
+    // Habilitar funcionalidade de arrastar o botão
+    this.enableButtonDrag(button);
   }
 
   toggleDarkMode(button) {
@@ -64,28 +71,23 @@ class DarkZuni {
     allElements.forEach(el => {
       const computedStyle = window.getComputedStyle(el);
 
-      // Salvando o estado original para poder restaurá-lo depois
       el.dataset.originalBackground = computedStyle.backgroundColor;
       el.dataset.originalColor = computedStyle.color;
       el.dataset.originalBorderColor = computedStyle.borderColor;
       el.dataset.originalBoxShadow = computedStyle.boxShadow;
       el.dataset.originalBackgroundImage = computedStyle.backgroundImage;
 
-      // Aplicando novos estilos
-      el.style.backgroundColor = '#121212'; // Cor de fundo escura
-      el.style.color = '#FFF'; // Cor do texto clara
+      el.style.backgroundColor = '#121212'; 
+      el.style.color = '#FFF';
 
-      // Mudando borda e sombra para um tema mais escuro
       if (computedStyle.borderColor !== 'transparent') {
         el.style.borderColor = '#FFF';
       }
       if (computedStyle.boxShadow && computedStyle.boxShadow !== 'none') {
         el.style.boxShadow = '0 0 5px 2px rgba(255, 255, 255, 0.3)';
       }
-
-      // Mudando imagens de fundo para uma cor de fundo escura ou sombra
       if (computedStyle.backgroundImage !== 'none') {
-        el.style.backgroundImage = 'none'; // Desabilita as imagens de fundo
+        el.style.backgroundImage = 'none';
       }
     });
   }
@@ -94,8 +96,8 @@ class DarkZuni {
     const bodyComputedStyle = window.getComputedStyle(document.body);
     document.body.dataset.originalBackground = bodyComputedStyle.backgroundColor;
     document.body.dataset.originalBackgroundImage = bodyComputedStyle.backgroundImage;
-    document.body.style.backgroundColor = '#121212'; // Fundo escuro
-    document.body.style.backgroundImage = 'none'; // Desabilita a imagem de fundo
+    document.body.style.backgroundColor = '#121212'; 
+    document.body.style.backgroundImage = 'none'; 
   }
 
   resetElementStyles() {
@@ -126,6 +128,33 @@ class DarkZuni {
     if (document.body.dataset.originalBackgroundImage) {
       document.body.style.backgroundImage = document.body.dataset.originalBackgroundImage;
     }
+  }
+
+  enableButtonDrag(button) {
+    let isDragging = false;
+    let offsetX = 0, offsetY = 0;
+
+    // Função para iniciar o arraste
+    button.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      offsetX = e.clientX - button.getBoundingClientRect().left;
+      offsetY = e.clientY - button.getBoundingClientRect().top;
+      button.style.transition = 'none'; // Remove transições durante o arraste
+    });
+
+    // Função para mover o botão
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        button.style.left = `${e.clientX - offsetX}px`;
+        button.style.top = `${e.clientY - offsetY}px`;
+      }
+    });
+
+    // Função para parar o arraste
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      button.style.transition = 'left 0.1s ease, top 0.1s ease'; // Restaura transições
+    });
   }
 }
 
