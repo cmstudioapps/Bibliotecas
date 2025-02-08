@@ -64,13 +64,28 @@ class DarkZuni {
     allElements.forEach(el => {
       const computedStyle = window.getComputedStyle(el);
 
+      // Salvando o estado original para poder restaurá-lo depois
       el.dataset.originalBackground = computedStyle.backgroundColor;
       el.dataset.originalColor = computedStyle.color;
+      el.dataset.originalBorderColor = computedStyle.borderColor;
+      el.dataset.originalBoxShadow = computedStyle.boxShadow;
+      el.dataset.originalBackgroundImage = computedStyle.backgroundImage;
 
-      el.style.backgroundColor = '#000';
-      el.style.color = '#FFF';
+      // Aplicando novos estilos
+      el.style.backgroundColor = '#121212'; // Cor de fundo escura
+      el.style.color = '#FFF'; // Cor do texto clara
+
+      // Mudando borda e sombra para um tema mais escuro
       if (computedStyle.borderColor !== 'transparent') {
         el.style.borderColor = '#FFF';
+      }
+      if (computedStyle.boxShadow && computedStyle.boxShadow !== 'none') {
+        el.style.boxShadow = '0 0 5px 2px rgba(255, 255, 255, 0.3)';
+      }
+
+      // Mudando imagens de fundo para uma cor de fundo escura ou sombra
+      if (computedStyle.backgroundImage !== 'none') {
+        el.style.backgroundImage = 'none'; // Desabilita as imagens de fundo
       }
     });
   }
@@ -78,7 +93,9 @@ class DarkZuni {
   applyDarkBackgroundToBody() {
     const bodyComputedStyle = window.getComputedStyle(document.body);
     document.body.dataset.originalBackground = bodyComputedStyle.backgroundColor;
+    document.body.dataset.originalBackgroundImage = bodyComputedStyle.backgroundImage;
     document.body.style.backgroundColor = '#121212'; // Fundo escuro
+    document.body.style.backgroundImage = 'none'; // Desabilita a imagem de fundo
   }
 
   resetElementStyles() {
@@ -90,13 +107,24 @@ class DarkZuni {
       if (el.dataset.originalColor) {
         el.style.color = el.dataset.originalColor;
       }
-      el.style.borderColor = '';
+      if (el.dataset.originalBorderColor) {
+        el.style.borderColor = el.dataset.originalBorderColor;
+      }
+      if (el.dataset.originalBoxShadow) {
+        el.style.boxShadow = el.dataset.originalBoxShadow;
+      }
+      if (el.dataset.originalBackgroundImage) {
+        el.style.backgroundImage = el.dataset.originalBackgroundImage;
+      }
     });
   }
 
   resetBodyBackground() {
     if (document.body.dataset.originalBackground) {
       document.body.style.backgroundColor = document.body.dataset.originalBackground;
+    }
+    if (document.body.dataset.originalBackgroundImage) {
+      document.body.style.backgroundImage = document.body.dataset.originalBackgroundImage;
     }
   }
 }
