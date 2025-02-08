@@ -19,6 +19,9 @@ class DarkZuni {
 
   createToggleButton() {
     const button = document.createElement('button');
+    // Identifica o botão para que ele não seja afetado pelos estilos dark
+    button.id = 'darkToggleButton';
+    button.setAttribute('data-ignore-dark', 'true');
     button.innerText = '🌓 Tema';
     button.style.cssText = `
       position: fixed;
@@ -45,6 +48,7 @@ class DarkZuni {
   }
 
   toggleDarkMode(button) {
+    // Alterna a classe no body para fins de controle (opcional)
     const isDarkMode = document.body.classList.toggle(this.darkClass);
     if (isDarkMode) {
       this.enableDarkMode();
@@ -69,16 +73,24 @@ class DarkZuni {
     this.stopMutationObserver();
   }
 
-  // Aplica os estilos dark a um elemento individual
+  // Aplica os estilos dark a um elemento individual, exceto aos que devem ser ignorados
   _applyDarkStylesToElement(el) {
+    if (el.hasAttribute('data-ignore-dark')) {
+      return;
+    }
     const computedStyle = window.getComputedStyle(el);
 
-    // Salva os estilos originais se ainda não estiverem salvos
-    if (!el.dataset.originalBackground) el.dataset.originalBackground = computedStyle.backgroundColor;
-    if (!el.dataset.originalColor) el.dataset.originalColor = computedStyle.color;
-    if (!el.dataset.originalBorderColor) el.dataset.originalBorderColor = computedStyle.borderColor;
-    if (!el.dataset.originalBoxShadow) el.dataset.originalBoxShadow = computedStyle.boxShadow;
-    if (!el.dataset.originalBackgroundImage) el.dataset.originalBackgroundImage = computedStyle.backgroundImage;
+    // Salva os estilos originais (caso ainda não estejam salvos)
+    if (!el.dataset.originalBackground)
+      el.dataset.originalBackground = computedStyle.backgroundColor;
+    if (!el.dataset.originalColor)
+      el.dataset.originalColor = computedStyle.color;
+    if (!el.dataset.originalBorderColor)
+      el.dataset.originalBorderColor = computedStyle.borderColor;
+    if (!el.dataset.originalBoxShadow)
+      el.dataset.originalBoxShadow = computedStyle.boxShadow;
+    if (!el.dataset.originalBackgroundImage)
+      el.dataset.originalBackgroundImage = computedStyle.backgroundImage;
 
     // Aplica os estilos dark
     el.style.backgroundColor = '#121212';
@@ -95,7 +107,7 @@ class DarkZuni {
     }
   }
 
-  // Aplica os estilos dark a todos os elementos existentes
+  // Aplica os estilos dark a todos os elementos já existentes
   applyDarkStylesToAllElements() {
     const allElements = document.querySelectorAll('*');
     allElements.forEach(el => this._applyDarkStylesToElement(el));
@@ -151,9 +163,9 @@ class DarkZuni {
     }
   }
 
-  // Inicia o MutationObserver para detectar novos elementos no DOM
+  // Inicia o MutationObserver para monitorar novos elementos adicionados ao DOM
   startMutationObserver() {
-    if (this.mutationObserver) return; // Já está observando
+    if (this.mutationObserver) return;
     this.mutationObserver = new MutationObserver(mutations => {
       mutations.forEach(mutation => {
         if (mutation.type === 'childList' && mutation.addedNodes.length) {
@@ -168,7 +180,6 @@ class DarkZuni {
     this.mutationObserver.observe(document.body, { childList: true, subtree: true });
   }
 
-  // Interrompe o MutationObserver
   stopMutationObserver() {
     if (this.mutationObserver) {
       this.mutationObserver.disconnect();
@@ -180,13 +191,15 @@ class DarkZuni {
     let isDragging = false;
     let offsetX = 0, offsetY = 0;
 
+    // Inicia o arraste
     button.addEventListener('mousedown', (e) => {
       isDragging = true;
       offsetX = e.clientX - button.getBoundingClientRect().left;
       offsetY = e.clientY - button.getBoundingClientRect().top;
-      button.style.transition = 'none'; // Remove transições durante o arraste
+      button.style.transition = 'none'; // Remove transição durante o arraste
     });
 
+    // Move o botão
     document.addEventListener('mousemove', (e) => {
       if (isDragging) {
         button.style.left = `${e.clientX - offsetX}px`;
@@ -194,9 +207,10 @@ class DarkZuni {
       }
     });
 
+    // Finaliza o arraste
     document.addEventListener('mouseup', () => {
       isDragging = false;
-      button.style.transition = 'left 0.1s ease, top 0.1s ease'; // Restaura transições
+      button.style.transition = 'left 0.1s ease, top 0.1s ease';
     });
   }
 }
