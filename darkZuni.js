@@ -1,7 +1,6 @@
 class DarkZuni {
   constructor() {
-    this.darkClass = 'dark-mode';
-    this.mutationObserver = null;
+    this.darkClass = "dark-mode";
     this.init();
   }
 
@@ -11,17 +10,17 @@ class DarkZuni {
   }
 
   applySavedTheme() {
-    const savedTheme = localStorage.getItem('darkZuniTheme') || 'light';
-    if (savedTheme === 'dark') {
+    const savedTheme = localStorage.getItem("darkZuniTheme") || "light";
+    if (savedTheme === "dark") {
       this.enableDarkMode();
     }
   }
 
   createToggleButton() {
-    const button = document.createElement('button');
-    button.id = 'darkToggleButton';
-    button.setAttribute('data-ignore-dark', 'true');
-    button.innerText = '🌓';
+    const button = document.createElement("button");
+    button.id = "darkToggleButton";
+    button.setAttribute("data-ignore-dark", "true");
+    button.innerText = "🌓";
 
     button.style.cssText = `
       position: fixed;
@@ -44,8 +43,8 @@ class DarkZuni {
       z-index: 1000;
     `;
 
-    button.addEventListener('click', (e) => {
-      if (!button.classList.contains('dragging')) {
+    button.addEventListener("click", (e) => {
+      if (!button.classList.contains("dragging")) {
         this.toggleDarkMode(button);
       }
     });
@@ -58,12 +57,12 @@ class DarkZuni {
     const isDarkMode = document.body.classList.toggle(this.darkClass);
     if (isDarkMode) {
       this.enableDarkMode();
-      localStorage.setItem('darkZuniTheme', 'dark');
-      button.innerText = '🌞';
+      localStorage.setItem("darkZuniTheme", "dark");
+      button.innerText = "🌞";
     } else {
       this.disableDarkMode();
-      localStorage.setItem('darkZuniTheme', 'light');
-      button.innerText = '🌓';
+      localStorage.setItem("darkZuniTheme", "light");
+      button.innerText = "🌓";
     }
   }
 
@@ -77,19 +76,18 @@ class DarkZuni {
 
   enableButtonDrag(button) {
     let isDragging = false;
-    let offsetX = 0, offsetY = 0;
+    let offsetX = 0,
+      offsetY = 0;
 
     function startDrag(e) {
       isDragging = true;
-      button.classList.add('dragging');
-      let touch = e.touches ? e.touches[0] : e;
-      offsetX = touch.clientX - button.getBoundingClientRect().left;
-      offsetY = touch.clientY - button.getBoundingClientRect().top;
-      button.style.transition = 'none';
+      button.classList.add("dragging");
+      button.style.transition = "none";
+      button.style.pointerEvents = "none"; // Evita interações indesejadas durante o arraste
 
-      // Remove as propriedades 'bottom' e 'right' para que o posicionamento seja feito apenas com 'left' e 'top'
-      button.style.bottom = 'auto';
-      button.style.right = 'auto';
+      let touch = e.touches ? e.touches[0] : e;
+      offsetX = touch.clientX - button.offsetLeft;
+      offsetY = touch.clientY - button.offsetTop;
     }
 
     function moveButton(e) {
@@ -113,17 +111,18 @@ class DarkZuni {
 
     function endDrag() {
       isDragging = false;
-      button.classList.remove('dragging');
-      button.style.transition = 'left 0.1s ease, top 0.1s ease';
+      button.classList.remove("dragging");
+      button.style.transition = "left 0.1s ease, top 0.1s ease";
+      button.style.pointerEvents = "auto"; // Reativa o clique após o arraste
     }
 
-    button.addEventListener('mousedown', startDrag);
-    document.addEventListener('mousemove', moveButton);
-    document.addEventListener('mouseup', endDrag);
+    button.addEventListener("mousedown", startDrag);
+    document.addEventListener("mousemove", moveButton);
+    document.addEventListener("mouseup", endDrag);
 
-    button.addEventListener('touchstart', startDrag);
-    document.addEventListener('touchmove', moveButton);
-    document.addEventListener('touchend', endDrag);
+    button.addEventListener("touchstart", startDrag);
+    document.addEventListener("touchmove", moveButton);
+    document.addEventListener("touchend", endDrag);
   }
 }
 
