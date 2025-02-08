@@ -1,6 +1,7 @@
 class DarkZuni {
   constructor() {
     this.darkClass = 'dark-mode';
+    this.mutationObserver = null;
     this.init();
   }
 
@@ -33,13 +34,13 @@ class DarkZuni {
       cursor: pointer;
     `;
 
-    // Função para alternar o tema
+    // Alterna o tema ao clicar
     button.addEventListener('click', () => this.toggleDarkMode(button));
 
     // Adiciona o botão ao corpo do documento
     document.body.appendChild(button);
 
-    // Habilitar funcionalidade de arrastar o botão
+    // Habilita a funcionalidade de arrastar o botão
     this.enableButtonDrag(button);
   }
 
@@ -59,45 +60,65 @@ class DarkZuni {
   enableDarkMode() {
     this.applyDarkStylesToAllElements();
     this.applyDarkBackgroundToBody();
+    this.startMutationObserver();
   }
 
   disableDarkMode() {
     this.resetElementStyles();
     this.resetBodyBackground();
+    this.stopMutationObserver();
   }
 
+  // Aplica os estilos dark a um elemento individual
+  _applyDarkStylesToElement(el) {
+    const computedStyle = window.getComputedStyle(el);
+
+    // Salva os estilos originais se ainda não estiverem salvos
+    if (!el.dataset.originalBackground) el.dataset.originalBackground = computedStyle.backgroundColor;
+    if (!el.dataset.originalColor) el.dataset.originalColor = computedStyle.color;
+    if (!el.dataset.originalBorderColor) el.dataset.originalBorderColor = computedStyle.borderColor;
+    if (!el.dataset.originalBoxShadow) el.dataset.originalBoxShadow = computedStyle.boxShadow;
+    if (!el.dataset.originalBackgroundImage) el.dataset.originalBackgroundImage = computedStyle.backgroundImage;
+
+    // Aplica os estilos dark
+    el.style.backgroundColor = '#121212';
+    el.style.color = '#FFF';
+
+    if (computedStyle.borderColor !== 'transparent') {
+      el.style.borderColor = '#FFF';
+    }
+    if (computedStyle.boxShadow && computedStyle.boxShadow !== 'none') {
+      el.style.boxShadow = '0 0 5px 2px rgba(255, 255, 255, 0.3)';
+    }
+    if (computedStyle.backgroundImage !== 'none') {
+      el.style.backgroundImage = 'none';
+    }
+  }
+
+  // Aplica os estilos dark a todos os elementos existentes
   applyDarkStylesToAllElements() {
     const allElements = document.querySelectorAll('*');
-    allElements.forEach(el => {
-      const computedStyle = window.getComputedStyle(el);
+    allElements.forEach(el => this._applyDarkStylesToElement(el));
+  }
 
-      el.dataset.originalBackground = computedStyle.backgroundColor;
-      el.dataset.originalColor = computedStyle.color;
-      el.dataset.originalBorderColor = computedStyle.borderColor;
-      el.dataset.originalBoxShadow = computedStyle.boxShadow;
-      el.dataset.originalBackgroundImage = computedStyle.backgroundImage;
-
-      el.style.backgroundColor = '#121212'; 
-      el.style.color = '#FFF';
-
-      if (computedStyle.borderColor !== 'transparent') {
-        el.style.borderColor = '#FFF';
-      }
-      if (computedStyle.boxShadow && computedStyle.boxShadow !== 'none') {
-        el.style.boxShadow = '0 0 5px 2px rgba(255, 255, 255, 0.3)';
-      }
-      if (computedStyle.backgroundImage !== 'none') {
-        el.style.backgroundImage = 'none';
-      }
-    });
+  // Aplica os estilos dark a um elemento e seus descendentes
+  applyDarkStylesToElementAndDescendants(element) {
+    if (element.nodeType !== Node.ELEMENT_NODE) return;
+    this._applyDarkStylesToElement(element);
+    const descendants = element.querySelectorAll('*');
+    descendants.forEach(el => this._applyDarkStylesToElement(el));
   }
 
   applyDarkBackgroundToBody() {
     const bodyComputedStyle = window.getComputedStyle(document.body);
-    document.body.dataset.originalBackground = bodyComputedStyle.backgroundColor;
-    document.body.dataset.originalBackgroundImage = bodyComputedStyle.backgroundImage;
-    document.body.style.backgroundColor = '#121212'; 
-    document.body.style.backgroundImage = 'none'; 
+    if (!document.body.dataset.originalBackground) {
+      document.body.dataset.originalBackground = bodyComputedStyle.backgroundColor;
+    }
+    if (!document.body.dataset.originalBackgroundImage) {
+      document.body.dataset.originalBackgroundImage = bodyComputedStyle.backgroundImage;
+    }
+    document.body.style.backgroundColor = '#121212';
+    document.body.style.backgroundImage = 'none';
   }
 
   resetElementStyles() {
@@ -130,11 +151,35 @@ class DarkZuni {
     }
   }
 
+  // Inicia o MutationObserver para detectar novos elementos no DOM
+  startMutationObserver() {
+    if (this.mutationObserver) return; // Já está observando
+    this.mutationObserver = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.type === 'childList' && mutation.addedNodes.length) {
+          mutation.addedNodes.forEach(node => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              this.applyDarkStylesToElementAndDescendants(node);
+            }
+          });
+        }
+      });
+    });
+    this.mutationObserver.observe(document.body, { childList: true, subtree: true });
+  }
+
+  // Interrompe o MutationObserver
+  stopMutationObserver() {
+    if (this.mutationObserver) {
+      this.mutationObserver.disconnect();
+      this.mutationObserver = null;
+    }
+  }
+
   enableButtonDrag(button) {
     let isDragging = false;
     let offsetX = 0, offsetY = 0;
 
-    // Função para iniciar o arraste
     button.addEventListener('mousedown', (e) => {
       isDragging = true;
       offsetX = e.clientX - button.getBoundingClientRect().left;
@@ -142,7 +187,6 @@ class DarkZuni {
       button.style.transition = 'none'; // Remove transições durante o arraste
     });
 
-    // Função para mover o botão
     document.addEventListener('mousemove', (e) => {
       if (isDragging) {
         button.style.left = `${e.clientX - offsetX}px`;
@@ -150,7 +194,6 @@ class DarkZuni {
       }
     });
 
-    // Função para parar o arraste
     document.addEventListener('mouseup', () => {
       isDragging = false;
       button.style.transition = 'left 0.1s ease, top 0.1s ease'; // Restaura transições
