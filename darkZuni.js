@@ -188,31 +188,42 @@ class DarkZuni {
   }
 
   enableButtonDrag(button) {
-    let isDragging = false;
-    let offsetX = 0, offsetY = 0;
+  let isDragging = false;
+  let offsetX = 0, offsetY = 0;
 
-    // Inicia o arraste
-    button.addEventListener('mousedown', (e) => {
-      isDragging = true;
-      offsetX = e.clientX - button.getBoundingClientRect().left;
-      offsetY = e.clientY - button.getBoundingClientRect().top;
-      button.style.transition = 'none'; // Remove transição durante o arraste
-    });
-
-    // Move o botão
-    document.addEventListener('mousemove', (e) => {
-      if (isDragging) {
-        button.style.left = `${e.clientX - offsetX}px`;
-        button.style.top = `${e.clientY - offsetY}px`;
-      }
-    });
-
-    // Finaliza o arraste
-    document.addEventListener('mouseup', () => {
-      isDragging = false;
-      button.style.transition = 'left 0.1s ease, top 0.1s ease';
-    });
+  // Inicia o arraste
+  function startDrag(e) {
+    isDragging = true;
+    let touch = e.touches ? e.touches[0] : e; // Suporte a toque
+    offsetX = touch.clientX - button.getBoundingClientRect().left;
+    offsetY = touch.clientY - button.getBoundingClientRect().top;
+    button.style.transition = 'none'; // Remove transição durante o arraste
   }
+
+  // Move o botão
+  function moveButton(e) {
+    if (isDragging) {
+      let touch = e.touches ? e.touches[0] : e;
+      button.style.left = `${touch.clientX - offsetX}px`;
+      button.style.top = `${touch.clientY - offsetY}px`;
+    }
+  }
+
+  // Finaliza o arraste
+  function endDrag() {
+    isDragging = false;
+    button.style.transition = 'left 0.1s ease, top 0.1s ease';
+  }
+
+  // Eventos para mouse
+  button.addEventListener('mousedown', startDrag);
+  document.addEventListener('mousemove', moveButton);
+  document.addEventListener('mouseup', endDrag);
+
+  // Eventos para toque
+  button.addEventListener('touchstart', startDrag);
+  document.addEventListener('touchmove', moveButton);
+  document.addEventListener('touchend', endDrag);
 }
 
 // Ativa a biblioteca
