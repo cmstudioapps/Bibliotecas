@@ -1,6 +1,7 @@
 class DarkZuni {
   constructor() {
-    this.darkClass = "dark-mode";
+    this.darkClass = 'dark-mode';
+    this.mutationObserver = null;
     this.init();
   }
 
@@ -10,120 +11,209 @@ class DarkZuni {
   }
 
   applySavedTheme() {
-    const savedTheme = localStorage.getItem("darkZuniTheme") || "light";
-    if (savedTheme === "dark") {
+    const savedTheme = localStorage.getItem('darkZuniTheme') || 'light';
+    if (savedTheme === 'dark') {
       this.enableDarkMode();
     }
   }
 
   createToggleButton() {
-    const button = document.createElement("button");
-    button.id = "darkToggleButton";
-    button.setAttribute("data-ignore-dark", "true");
-    button.innerText = "🌓";
-
+    const button = document.createElement('button');
+    // Identifica o botão para que ele não seja afetado pelos estilos dark
+    button.id = 'darkToggleButton';
+    button.setAttribute('data-ignore-dark', 'true');
+    button.innerText = '🌓 Tema';
     button.style.cssText = `
       position: fixed;
-      bottom: 10px;
-      right: 10px;
-      width: 60px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      font-weight: bold;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      z-index: 1000;
+      padding: 10px 15px;
       background-color: #333;
       color: white;
       border: none;
-      border-radius: 50%;
-      cursor: grab;
-      touch-action: none;
-      user-select: none;
-      z-index: 1000;
+      border-radius: 50px;
+      cursor: pointer;
     `;
 
-    button.addEventListener("click", (e) => {
-      if (!button.classList.contains("dragging")) {
-        this.toggleDarkMode(button);
-      }
-    });
+    // Alterna o tema ao clicar
+    button.addEventListener('click', () => this.toggleDarkMode(button));
 
+    // Adiciona o botão ao corpo do documento
     document.body.appendChild(button);
+
+    // Habilita a funcionalidade de arrastar o botão
     this.enableButtonDrag(button);
   }
 
   toggleDarkMode(button) {
+    // Alterna a classe no body para fins de controle (opcional)
     const isDarkMode = document.body.classList.toggle(this.darkClass);
     if (isDarkMode) {
       this.enableDarkMode();
-      localStorage.setItem("darkZuniTheme", "dark");
-      button.innerText = "🌞";
+      localStorage.setItem('darkZuniTheme', 'dark');
+      button.innerText = '🌞 Tema Claro';
     } else {
       this.disableDarkMode();
-      localStorage.setItem("darkZuniTheme", "light");
-      button.innerText = "🌓";
+      localStorage.setItem('darkZuniTheme', 'light');
+      button.innerText = '🌓 Tema Escuro';
     }
   }
 
   enableDarkMode() {
-    document.body.classList.add(this.darkClass);
+    this.applyDarkStylesToAllElements();
+    this.applyDarkBackgroundToBody();
+    this.startMutationObserver();
   }
 
   disableDarkMode() {
-    document.body.classList.remove(this.darkClass);
+    this.resetElementStyles();
+    this.resetBodyBackground();
+    this.stopMutationObserver();
+  }
+
+  // Aplica os estilos dark a um elemento individual, exceto aos que devem ser ignorados
+  _applyDarkStylesToElement(el) {
+    if (el.hasAttribute('data-ignore-dark')) {
+      return;
+    }
+    const computedStyle = window.getComputedStyle(el);
+
+    // Salva os estilos originais (caso ainda não estejam salvos)
+    if (!el.dataset.originalBackground)
+      el.dataset.originalBackground = computedStyle.backgroundColor;
+    if (!el.dataset.originalColor)
+      el.dataset.originalColor = computedStyle.color;
+    if (!el.dataset.originalBorderColor)
+      el.dataset.originalBorderColor = computedStyle.borderColor;
+    if (!el.dataset.originalBoxShadow)
+      el.dataset.originalBoxShadow = computedStyle.boxShadow;
+    if (!el.dataset.originalBackgroundImage)
+      el.dataset.originalBackgroundImage = computedStyle.backgroundImage;
+
+    // Aplica os estilos dark
+    el.style.backgroundColor = '#121212';
+    el.style.color = '#FFF';
+
+    if (computedStyle.borderColor !== 'transparent') {
+      el.style.borderColor = '#FFF';
+    }
+    if (computedStyle.boxShadow && computedStyle.boxShadow !== 'none') {
+      el.style.boxShadow = '0 0 5px 2px rgba(255, 255, 255, 0.3)';
+    }
+    if (computedStyle.backgroundImage !== 'none') {
+      el.style.backgroundImage = 'none';
+    }
+  }
+
+  // Aplica os estilos dark a todos os elementos já existentes
+  applyDarkStylesToAllElements() {
+    const allElements = document.querySelectorAll('*');
+    allElements.forEach(el => this._applyDarkStylesToElement(el));
+  }
+
+  // Aplica os estilos dark a um elemento e seus descendentes
+  applyDarkStylesToElementAndDescendants(element) {
+    if (element.nodeType !== Node.ELEMENT_NODE) return;
+    this._applyDarkStylesToElement(element);
+    const descendants = element.querySelectorAll('*');
+    descendants.forEach(el => this._applyDarkStylesToElement(el));
+  }
+
+  applyDarkBackgroundToBody() {
+    const bodyComputedStyle = window.getComputedStyle(document.body);
+    if (!document.body.dataset.originalBackground) {
+      document.body.dataset.originalBackground = bodyComputedStyle.backgroundColor;
+    }
+    if (!document.body.dataset.originalBackgroundImage) {
+      document.body.dataset.originalBackgroundImage = bodyComputedStyle.backgroundImage;
+    }
+    document.body.style.backgroundColor = '#121212';
+    document.body.style.backgroundImage = 'none';
+  }
+
+  resetElementStyles() {
+    const allElements = document.querySelectorAll('*');
+    allElements.forEach(el => {
+      if (el.dataset.originalBackground) {
+        el.style.backgroundColor = el.dataset.originalBackground;
+      }
+      if (el.dataset.originalColor) {
+        el.style.color = el.dataset.originalColor;
+      }
+      if (el.dataset.originalBorderColor) {
+        el.style.borderColor = el.dataset.originalBorderColor;
+      }
+      if (el.dataset.originalBoxShadow) {
+        el.style.boxShadow = el.dataset.originalBoxShadow;
+      }
+      if (el.dataset.originalBackgroundImage) {
+        el.style.backgroundImage = el.dataset.originalBackgroundImage;
+      }
+    });
+  }
+
+  resetBodyBackground() {
+    if (document.body.dataset.originalBackground) {
+      document.body.style.backgroundColor = document.body.dataset.originalBackground;
+    }
+    if (document.body.dataset.originalBackgroundImage) {
+      document.body.style.backgroundImage = document.body.dataset.originalBackgroundImage;
+    }
+  }
+
+  // Inicia o MutationObserver para monitorar novos elementos adicionados ao DOM
+  startMutationObserver() {
+    if (this.mutationObserver) return;
+    this.mutationObserver = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.type === 'childList' && mutation.addedNodes.length) {
+          mutation.addedNodes.forEach(node => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              this.applyDarkStylesToElementAndDescendants(node);
+            }
+          });
+        }
+      });
+    });
+    this.mutationObserver.observe(document.body, { childList: true, subtree: true });
+  }
+
+  stopMutationObserver() {
+    if (this.mutationObserver) {
+      this.mutationObserver.disconnect();
+      this.mutationObserver = null;
+    }
   }
 
   enableButtonDrag(button) {
     let isDragging = false;
-    let offsetX = 0,
-      offsetY = 0;
+    let offsetX = 0, offsetY = 0;
 
-    function startDrag(e) {
+    // Inicia o arraste
+    button.addEventListener('mousedown', (e) => {
       isDragging = true;
-      button.classList.add("dragging");
-      button.style.transition = "none";
-      button.style.pointerEvents = "none"; // Evita interações indesejadas durante o arraste
+      offsetX = e.clientX - button.getBoundingClientRect().left;
+      offsetY = e.clientY - button.getBoundingClientRect().top;
+      button.style.transition = 'none'; // Remove transição durante o arraste
+    });
 
-      let touch = e.touches ? e.touches[0] : e;
-      offsetX = touch.clientX - button.offsetLeft;
-      offsetY = touch.clientY - button.offsetTop;
-    }
+    // Move o botão
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        button.style.left = `${e.clientX - offsetX}px`;
+        button.style.top = `${e.clientY - offsetY}px`;
+      }
+    });
 
-    function moveButton(e) {
-      if (!isDragging) return;
-      let touch = e.touches ? e.touches[0] : e;
-
-      let screenWidth = window.innerWidth;
-      let screenHeight = window.innerHeight;
-      let buttonWidth = button.offsetWidth;
-      let buttonHeight = button.offsetHeight;
-
-      let newLeft = touch.clientX - offsetX;
-      let newTop = touch.clientY - offsetY;
-
-      newLeft = Math.max(0, Math.min(screenWidth - buttonWidth, newLeft));
-      newTop = Math.max(0, Math.min(screenHeight - buttonHeight, newTop));
-
-      button.style.left = `${newLeft}px`;
-      button.style.top = `${newTop}px`;
-    }
-
-    function endDrag() {
+    // Finaliza o arraste
+    document.addEventListener('mouseup', () => {
       isDragging = false;
-      button.classList.remove("dragging");
-      button.style.transition = "left 0.1s ease, top 0.1s ease";
-      button.style.pointerEvents = "auto"; // Reativa o clique após o arraste
-    }
-
-    button.addEventListener("mousedown", startDrag);
-    document.addEventListener("mousemove", moveButton);
-    document.addEventListener("mouseup", endDrag);
-
-    button.addEventListener("touchstart", startDrag);
-    document.addEventListener("touchmove", moveButton);
-    document.addEventListener("touchend", endDrag);
+      button.style.transition = 'left 0.1s ease, top 0.1s ease';
+    });
   }
 }
 
+// Ativa a biblioteca
 new DarkZuni();
