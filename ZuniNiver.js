@@ -34,14 +34,14 @@ const ZuniNiver = {
         modal.innerHTML = `
             <div class="zuni-modal-content">
                 <span class="zuni-close">&times;</span>
-                <h2 id="h2">🎉 Feliz Aniversário! 🎂</h2>
+                <h2 id="h2">🎉 Feliz Aniversário</h2>
                 <p>Que seu dia seja cheio de alegria e diversão! 🥳</p>
                 <div class="zuni-balloons"></div>
                 <canvas id="zuniConfetti"></canvas>
             </div>
         `;
         document.body.appendChild(modal);
-    document.getElementById("h2").innerHTML += `${localStorage.getItem("nome") || ""}`
+    document.getElementById("h2").innerHTML += ` ${localStorage.getItem("nome") || ""}!🎂`
         // Toca o som de festa
         let audio = new Audio("https://www.fesliyanstudios.com/play-mp3/4384");
         audio.play();
