@@ -10,8 +10,8 @@ const ZuniNiver = {
         }
     },
 
-    askBirthDate: function () {
-        let date = prompt("Digite sua data de nascimento (YYYY-MM-DD):");
+    askBirthDate: async function () {
+        let date = await prompt("Digite sua data de nascimento (YYYY-MM-DD):");
         if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
             localStorage.setItem("dataNascimento", date);
         } else {
