@@ -172,4 +172,8 @@ const ZuniNiver = {
 };
 
 // Inicia a biblioteca
+setTimeout(()=> {
+
 ZuniNiver.init();
+
+},3000)
