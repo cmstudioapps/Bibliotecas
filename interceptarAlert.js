@@ -1,142 +1,104 @@
-(function () {
-  // Criar o container do alerta customizado
-  const alertContainer = document.createElement("div");
-  alertContainer.id = "custom-alert";
-  alertContainer.innerHTML = `
-    <div class="alert-box">
-      <p id="alert-message"></p>
-      <button id="alert-ok">OK</button>
-    </div>
-  `;
-  document.body.appendChild(alertContainer);
+// interceptarAlert.js
 
-  // Criar o container do prompt customizado
-  const promptContainer = document.createElement("div");
-  promptContainer.id = "custom-prompt";
-  promptContainer.innerHTML = `
-    <div class="alert-box">
-      <p id="prompt-message"></p>
-      <input type="text" id="prompt-input" placeholder="Digite sua resposta" />
-      <button id="prompt-ok">OK</button>
-      <button id="prompt-cancel">Cancelar</button>
-    </div>
-  `;
-  document.body.appendChild(promptContainer);
-
-  // Criar o container do confirm customizado
-  const confirmContainer = document.createElement("div");
-  confirmContainer.id = "custom-confirm";
-  confirmContainer.innerHTML = `
-    <div class="alert-box">
-      <p id="confirm-message"></p>
-      <button id="confirm-ok">OK</button>
-      <button id="confirm-cancel">Cancelar</button>
-    </div>
-  `;
-  document.body.appendChild(confirmContainer);
-
-  // Adicionar estilos
-  const styles = document.createElement("style");
-  styles.innerHTML = `
-    #custom-alert, #custom-prompt, #custom-confirm {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      color: black;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      display: none;
-    }
-    .alert-box {
-      background: white;
-      padding: 20px;
-      border-radius: 5px;
-      text-align: center;
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    #alert-ok, #prompt-ok, #prompt-cancel, #confirm-ok, #confirm-cancel {
-      margin-top: 10px;
-      padding: 5px 15px;
-      border: none;
-      background: blue;
-      color: white;
-      border-radius: 3px;
-      cursor: pointer;
-    }
-    #alert-ok:hover, #prompt-ok:hover, #prompt-cancel:hover, #confirm-ok:hover, #confirm-cancel:hover {
-      background: darkblue;
-    }
-    #prompt-input {
-      margin-top: 10px;
-      padding: 5px;
-      border-radius: 3px;
-      border: 1px solid #ccc;
-      width: 100%;
-    }
-  `;
-  document.head.appendChild(styles);
-
-  // Intercepta o alert padrão
-  window.alert = function (message) {
+(function() {
+  // Função auxiliar para criar o modal
+  function createModal(title, message, inputType) {
     return new Promise((resolve) => {
-      const alertMessage = document.getElementById("alert-message");
-      if (alertMessage) {
-        alertMessage.textContent = message || "Mensagem não definida!";
+      const modal = document.createElement("div");
+      modal.style.position = "fixed";
+      modal.style.top = "0";
+      modal.style.left = "0";
+      modal.style.width = "100%";
+      modal.style.height = "100%";
+      modal.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+      modal.style.display = "flex";
+      modal.style.justifyContent = "center";
+      modal.style.alignItems = "center";
+      modal.style.zIndex = "9999";
+
+      const content = document.createElement("div");
+      content.style.backgroundColor = "#fff";
+      content.style.padding = "20px";
+      content.style.borderRadius = "10px";
+      content.style.textAlign = "center";
+      content.style.width = "80%";
+      content.style.maxWidth = "400px";
+
+      const titleEl = document.createElement("h3");
+      titleEl.innerText = title;
+      content.appendChild(titleEl);
+
+      const messageEl = document.createElement("p");
+      messageEl.innerText = message;
+      content.appendChild(messageEl);
+
+      let inputEl = null;
+      if (inputType === "prompt") {
+        inputEl = document.createElement("input");
+        inputEl.style.width = "80%";
+        inputEl.style.margin = "10px 0";
+        inputEl.style.padding = "8px";
+        inputEl.style.borderRadius = "5px";
+        inputEl.style.border = "1px solid #ccc";
+        content.appendChild(inputEl);
       }
-      alertContainer.style.display = "flex";
 
-      document.getElementById("alert-ok").onclick = function () {
-        alertContainer.style.display = "none";
-        resolve(); // Aguarda o clique no botão OK
+      const buttonOk = document.createElement("button");
+      buttonOk.innerText = "OK";
+      buttonOk.style.margin = "10px";
+      buttonOk.style.padding = "8px 15px";
+      buttonOk.style.backgroundColor = "#007bff";
+      buttonOk.style.color = "#fff";
+      buttonOk.style.border = "none";
+      buttonOk.style.borderRadius = "5px";
+      buttonOk.style.cursor = "pointer";
+      buttonOk.onclick = function() {
+        modal.remove();
+        if (inputType === "prompt") {
+          resolve(inputEl.value);
+        } else {
+          resolve(true);
+        }
       };
+      content.appendChild(buttonOk);
+
+      if (inputType !== "alert") {
+        const buttonCancel = document.createElement("button");
+        buttonCancel.innerText = "Cancelar";
+        buttonCancel.style.margin = "10px";
+        buttonCancel.style.padding = "8px 15px";
+        buttonCancel.style.backgroundColor = "#dc3545";
+        buttonCancel.style.color = "#fff";
+        buttonCancel.style.border = "none";
+        buttonCancel.style.borderRadius = "5px";
+        buttonCancel.style.cursor = "pointer";
+        buttonCancel.onclick = function() {
+          modal.remove();
+          resolve(inputType === "prompt" ? null : false);
+        };
+        content.appendChild(buttonCancel);
+      }
+
+      modal.appendChild(content);
+      document.body.appendChild(modal);
+
+      if (inputEl) inputEl.focus();
     });
+  }
+
+  // Sobrescreve alert()
+  window.alert = function(message) {
+    return createModal("Alerta", message, "alert");
   };
 
-  // Intercepta o prompt padrão
-  window.prompt = function (message, defaultValue = "") {
-    return new Promise((resolve) => {
-      const promptMessage = document.getElementById("prompt-message");
-      const promptInput = document.getElementById("prompt-input");
-
-      if (promptMessage) promptMessage.textContent = message || "Mensagem não definida!";
-      if (promptInput) promptInput.value = defaultValue;
-
-      promptContainer.style.display = "flex";
-
-      document.getElementById("prompt-ok").onclick = function () {
-        resolve(promptInput.value);
-        promptContainer.style.display = "none";
-      };
-
-      document.getElementById("prompt-cancel").onclick = function () {
-        resolve(null);
-        promptContainer.style.display = "none";
-      };
-    });
+  // Sobrescreve confirm()
+  window.confirm = function(message) {
+    return createModal("Confirmação", message, "confirm");
   };
 
-  // Intercepta o confirm padrão
-  window.confirm = function (message) {
-    return new Promise((resolve) => {
-      const confirmMessage = document.getElementById("confirm-message");
-      if (confirmMessage) confirmMessage.textContent = message || "Mensagem não definida!";
-
-      confirmContainer.style.display = "flex";
-
-      document.getElementById("confirm-ok").onclick = function () {
-        resolve(true);
-        confirmContainer.style.display = "none";
-      };
-
-      document.getElementById("confirm-cancel").onclick = function () {
-        resolve(false);
-        confirmContainer.style.display = "none";
-      };
-    });
+  // Sobrescreve prompt()
+  window.prompt = function(message, defaultValue = "") {
+    return createModal("Digite:", message, "prompt").then(result => result || defaultValue);
   };
+
 })();
