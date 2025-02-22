@@ -1,8 +1,5 @@
-// interceptarAlert.js
-
 (function() {
-  // Função auxiliar para criar o modal
-  function createModal(title, message, inputType) {
+  function createModal(message, inputType) {
     return new Promise((resolve) => {
       const modal = document.createElement("div");
       modal.style.position = "fixed";
@@ -23,9 +20,10 @@
       content.style.textAlign = "center";
       content.style.width = "80%";
       content.style.maxWidth = "400px";
+      content.style.color = "#000"; // Alterado para preto
 
       const titleEl = document.createElement("h3");
-      titleEl.innerText = title;
+      titleEl.innerText = document.title; // Usando o título do documento
       content.appendChild(titleEl);
 
       const messageEl = document.createElement("p");
@@ -86,19 +84,16 @@
     });
   }
 
-  // Sobrescreve alert()
   window.alert = function(message) {
-    return createModal("Alerta", message, "alert");
+    return createModal(message, "alert");
   };
 
-  // Sobrescreve confirm()
   window.confirm = function(message) {
-    return createModal("Confirmação", message, "confirm");
+    return createModal(message, "confirm");
   };
 
-  // Sobrescreve prompt()
   window.prompt = function(message, defaultValue = "") {
-    return createModal("Digite:", message, "prompt").then(result => result || defaultValue);
+    return createModal(message, "prompt").then(result => result || defaultValue);
   };
 
 })();
