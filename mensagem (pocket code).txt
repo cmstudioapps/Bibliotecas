@@ -1,1 +1,1 @@
-isso aqui /n é a mensagem
+isso aqui \n é a mensagem
