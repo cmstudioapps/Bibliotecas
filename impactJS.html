@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentação Impact JS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1, h2 {
+            color: #4a90e2;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 4px;
+            font-size: 1.1em;
+            font-family: Consolas, monospace;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Documentação da Biblioteca Impact JS</h1>
+
+    <p>A biblioteca <strong>Impact JS</strong> oferece funcionalidades para detectar colisões entre elementos HTML e controlar o movimento deles. Você pode escolher entre uma explicação para iniciantes ou para programadores mais experientes. Selecione seu nível de experiência:</p>
+
+    <h2>Qual é o seu nível de experiência?</h2>
+    <p><strong>Você já é um programador experiente?</strong></p>
+    <button onclick="mostrarExperiente()">Sim, sou experiente</button>
+    <button onclick="mostrarIniciante()">Não, sou iniciante</button>
+
+    <div id="conteudoIniciante" style="display:none;">
+        <h2>Para Iniciantes</h2>
+        <p>Se você está começando agora, aqui está uma explicação simples sobre como usar a biblioteca.</p>
+
+        <h3>O que é Impact JS?</h3>
+        <p>A biblioteca Impact JS serve para detectar quando dois elementos colidem, ou seja, quando eles se encontram fisicamente na tela. Isso é útil para criar animações e interações no seu site.</p>
+
+        <h3>Como Usar?</h3>
+        <ol>
+            <li><strong>Adicionar a Biblioteca:</strong> Para carregar a biblioteca em seu projeto, use o <code>fetch()</code> para buscar o código diretamente do link abaixo e executar:
+                <pre><code>
+fetch('https://raw.githubusercontent.com/cmstudioapps/Bibliotecas/main/impact.js')
+    .then(response => response.text())
+    .then(script => {
+        eval(script);  // Executa o código da biblioteca
+    })
+    .catch(error => console.error('Erro ao carregar a biblioteca:', error));
+                </code></pre>
+            </li>
+            <li><strong>Verificar Colisões:</strong> Use a função <code>detectar</code> para verificar se há colisões entre elementos.
+                <pre><code>let elementos = [document.getElementById("objeto1"), document.getElementById("objeto2")];
+detectar(elementos, (elem1, elem2) => {
+    console.log("Colisão detectada entre " + elem1.id + " e " + elem2.id);
+});</code></pre>
+            </li>
+            <li><strong>Parar o Movimento:</strong> Você pode parar o movimento de um elemento ao detectar uma colisão, definindo o parâmetro <code>parar</code> como <code>true</code>.
+                <pre><code>detectar(elementos, (elem1, elem2) => {
+    console.log("Parando movimento de " + elem1.id + " e " + elem2.id);
+}, true);</code></pre>
+            </li>
+            <li><strong>Alterar Interrupção de Movimento:</strong> Use a função <code>setPararMovimento</code> para ativar ou desativar dinamicamente a interrupção de movimento.
+                <pre><code>setPararMovimento(true); // Ativa
+setPararMovimento(false); // Desativa</code></pre>
+            </li>
+        </ol>
+    </div>
+
+    <div id="conteudoExperiente" style="display:none;">
+        <h2>Para Programadores Experientes</h2>
+        <p>Se você já é familiarizado com JavaScript, aqui está uma explicação mais detalhada sobre o funcionamento da biblioteca.</p>
+
+        <h3>Visão Geral</h3>
+        <p>A biblioteca Impact JS permite detectar colisões entre múltiplos elementos na página e interromper o movimento deles utilizando CSS (propriedades como <code>animation</code>, <code>transition</code> ou <code>transform</code>).</p>
+
+        <h3>Funções Principais</h3>
+        <ul>
+            <li><strong>Função <code>detectar</code>:</strong> Verifica colisões entre um conjunto de elementos e executa um <code>callback</code> para cada colisão.
+                <pre><code>detectar(elementos, (elem1, elem2) => {
+    console.log(`Colisão detectada entre ${elem1.id} e ${elem2.id}`);
+}, true);</code></pre>
+            </li>
+            <li><strong>Função <code>colisao</code>:</strong> Compara os limites de dois elementos e retorna se houve interseção (colisão).
+                <pre><code>const colidiu = colisao(elem1, elem2);
+if (colidiu) {
+    console.log("Os elementos colidiram!");
+}</code></pre>
+            </li>
+            <li><strong>Função <code>pararMovimento</code>:</strong> Remove qualquer animação ou transformação CSS do elemento.
+                <pre><code>pararMovimento(elem1); // Interrompe o movimento do elemento</code></pre>
+            </li>
+            <li><strong>Função <code>setPararMovimento</code>:</strong> Ativa ou desativa a interrupção do movimento de elementos colididos.
+                <pre><code>setPararMovimento(true); // Ativa
+setPararMovimento(false); // Desativa</code></pre>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        function mostrarIniciante() {
+            document.getElementById('conteudoIniciante').style.display = 'block';
+            document.getElementById('conteudoExperiente').style.display = 'none';
+        }
+
+        function mostrarExperiente() {
+            document.getElementById('conteudoIniciante').style.display = 'none';
+            document.getElementById('conteudoExperiente').style.display = 'block';
+        }
+    </script>
+    <br><br>
+    <hr ><br />
+<footer>
+  biblioteca montada por caio multiversando 
+</footer>
+</body>
+</html>
