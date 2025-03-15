@@ -29,7 +29,7 @@
                 setTimeout(() => atualizarNumeroOnline(valor), 100);
                 return;
             }
-            elemento.textContent = valor;
+            elemento.textContent += valor;
         }
 
         // Atualiza automaticamente o elemento "online"
