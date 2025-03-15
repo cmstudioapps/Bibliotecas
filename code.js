@@ -4,18 +4,21 @@
 
     // Função para codificar as chaves
     function encodeKey(key) {
+        if (!key) return key;
         return btoa(key.split("").reverse().join(""))
             .replace(/[.=+/]/g, m => charMap[m] || m);
     }
 
     // Função para decodificar as chaves
     function decodeKey(encodedKey) {
+        if (!encodedKey) return encodedKey;
         let base64Key = encodedKey.replace(/X[1-5]/g, m => reverseCharMap[m] || m);
         return atob(base64Key).split("").reverse().join("");
     }
 
     // Função para codificar os valores
     function encodeValue(value) {
+        if (value === null || value === undefined) return value;
         if (typeof value !== "string") value = JSON.stringify(value);
         let scrambled = btoa(value).split("").reverse().join("");
         return scrambled.replace(/[.=+/]/g, m => charMap[m] || m);
@@ -23,13 +26,15 @@
 
     // Função para decodificar os valores
     function decodeValue(encodedValue) {
+        if (encodedValue === null || encodedValue === undefined) return encodedValue;
         let unscrambled = encodedValue.replace(/X[1-5]/g, m => reverseCharMap[m] || m);
         return JSON.parse(atob(unscrambled.split("").reverse().join("")));
     }
 
     // Função principal para codificar qualquer objeto
     function x(obj) {
-        if (typeof obj !== "object" || obj === null) return encodeValue(obj);
+        if (obj === null || obj === undefined) return obj;
+        if (typeof obj !== "object") return encodeValue(obj);
         let encodedObj = {};
         for (let key in obj) {
             let newKey = encodeKey(key);
@@ -41,7 +46,8 @@
 
     // Função principal para decodificar qualquer objeto
     function y(obj) {
-        if (typeof obj !== "object" || obj === null) return decodeValue(obj);
+        if (obj === null || obj === undefined) return obj;
+        if (typeof obj !== "object") return decodeValue(obj);
         let decodedObj = {};
         for (let key in obj) {
             let newKey = decodeKey(key);
@@ -54,7 +60,7 @@
     // Função para codificar todas as variáveis globais ou locais no escopo
     function encodeAll() {
         for (let key in window) {
-            if (typeof window[key] !== 'function') {
+            if (typeof window[key] !== 'function' && window[key] !== null && window[key] !== undefined) {
                 window[key] = x(window[key]);
             }
         }
@@ -63,7 +69,7 @@
     // Função para decodificar todas as variáveis globais ou locais no escopo
     function decodeAll() {
         for (let key in window) {
-            if (typeof window[key] !== 'function') {
+            if (typeof window[key] !== 'function' && window[key] !== null && window[key] !== undefined) {
                 window[key] = y(window[key]);
             }
         }
