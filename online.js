@@ -26,7 +26,7 @@
             const quantidade = snapshot.val() || 0;
             const elemento = document.getElementById("online");
             if (elemento) {
-                elemento.textContent = quantidade;
+                elemento.textContent += quantidade;
             }
         });
     });
