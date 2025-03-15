@@ -20,5 +20,14 @@
         window.addEventListener("beforeunload", function () {
             atualizarOnline(-1);
         });
+
+        // Atualiza o elemento com id "online" automaticamente
+        onlineRef.on("value", function (snapshot) {
+            const quantidade = snapshot.val() || 0;
+            const elemento = document.getElementById("online");
+            if (elemento) {
+                elemento.textContent = quantidade;
+            }
+        });
     });
 })();
