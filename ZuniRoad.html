@@ -41,6 +41,9 @@
             padding: 20px;
             border: 2px dashed #666;
             background: #ddd;
+            position: relative;
+            overflow: hidden;
+            height: 200px; /* Altura fixa para as pré-visualizações */
         }
         footer {
             text-align: center;
@@ -103,6 +106,7 @@
             <p><strong>Pré-visualização da Pista Horizontal</strong></p>
             <script>
                 new ZuniRoad({
+                    container: ".preview", // Renderiza dentro da div .preview
                     width: "90%",
                     height: "200px",
                     speed: "1s",
@@ -128,6 +132,7 @@
             <p><strong>Pré-visualização da Pista Vertical</strong></p>
             <script>
                 new ZuniRoad({
+                    container: ".preview", // Renderiza dentro da div .preview
                     width: "200px",
                     height: "80%",
                     speed: "1.5s",
@@ -139,7 +144,7 @@
         </div>
 
         <h3>3. Pista com Container Personalizado</h3>
-        <pre><code>&lt;div id="custom-road" style="width: 300px; height: 400px; margin: 20px auto;"&gt;&lt;/div&gt;
+        <pre><code>&lt;div id="custom-road" style="width: 300px; height: 200px; margin: 20px auto;"&gt;&lt;/div&gt;
 &lt;script&gt;
     new ZuniRoad({
         container: "#custom-road",
@@ -151,7 +156,7 @@
 &lt;/script&gt;</code></pre>
         <div class="preview">
             <p><strong>Pré-visualização da Pista com Container Personalizado</strong></p>
-            <div id="custom-road" style="width: 300px; height: 400px; margin: 20px auto;"></div>
+            <div id="custom-road" style="width: 300px; height: 200px; margin: 20px auto;"></div>
             <script>
                 new ZuniRoad({
                     container: "#custom-road",
