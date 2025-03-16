@@ -49,55 +49,126 @@
             color: #666;
         }
     </style>
-    <script src="https://caiolibs.vercel.app/zuniRoad.js"></script>
+    <script src="https://caiolibs.vercel.app/ZuniRoad.js"></script>
 </head>
 <body>
 
     <div class="container">
         <h1>ZuniRoad.js - Documentação</h1>
-        <p><strong>ZuniRoad.js</strong> é uma biblioteca JavaScript para criar pistas animadas em projetos web.</p>
+        <p><strong>ZuniRoad.js</strong> é uma biblioteca JavaScript leve e fácil de usar para criar pistas animadas em projetos web. Ideal para simulações de tráfego, jogos ou efeitos visuais.</p>
 
         <h2>📌 Como Usar</h2>
         <p>Inclua a biblioteca no seu HTML:</p>
-        <pre><code>&lt;script src="https://caiolibs.vercel.app/zuniRoad.js"&gt;&lt;/script&gt;</code></pre>
+        <pre><code>&lt;script src="https://caiolibs.vercel.app/ZuniRoad.js"&gt;&lt;/script&gt;</code></pre>
 
         <h2>⚙️ Inicialização</h2>
-        <p>Para criar uma pista, chame a classe <code>ZuniRoad</code> e defina as opções desejadas:</p>
+        <p>Para criar uma pista, instancie a classe <code>ZuniRoad</code> e defina as opções desejadas:</p>
         <pre><code>&lt;script&gt;
     new ZuniRoad({
-        width: "80%",      // Largura da pista
-        height: "250px",   // Altura da pista
-        speed: "2s",       // Velocidade da animação
-        orientation: "vertical", // "horizontal" ou "vertical"
-        x: "30%",          // Posição X (pode ser "px" ou "%")
-        y: "10%"           // Posição Y (pode ser "px" ou "%")
+        container: "#road-container", // Seletor do container (opcional)
+        width: "80%",                // Largura da pista
+        height: "250px",             // Altura da pista
+        speed: "2s",                // Velocidade da animação
+        orientation: "horizontal",  // Direção: "horizontal" ou "vertical"
+        x: "30%",                   // Posição X (px ou %)
+        y: "10%"                    // Posição Y (px ou %)
     });
 &lt;/script&gt;</code></pre>
 
         <h2>🔧 Opções Disponíveis</h2>
         <ul>
-            <li><code>width</code>: Define a largura da pista (padrão: <code>90%</code>).</li>
-            <li><code>height</code>: Define a altura da pista (padrão: <code>200px</code>).</li>
-            <li><code>speed</code>: Velocidade da animação (padrão: <code>1s</code>).</li>
-            <li><code>orientation</code>: Direção da pista (<code>"horizontal"</code> ou <code>"vertical"</code>).</li>
-            <li><code>x</code>: Posição horizontal da pista (<code>px</code> ou <code>%</code>).</li>
-            <li><code>y</code>: Posição vertical da pista (<code>px</code> ou <code>%</code>).</li>
+            <li><strong><code>container</code></strong>: Seletor do elemento HTML onde a pista será renderizada. Se não for fornecido, a pista será adicionada ao <code>body</code>.</li>
+            <li><strong><code>width</code></strong>: Largura da pista (padrão: <code>90%</code>).</li>
+            <li><strong><code>height</code></strong>: Altura da pista (padrão: <code>200px</code>).</li>
+            <li><strong><code>speed</code></strong>: Duração da animação das faixas (padrão: <code>1s</code>).</li>
+            <li><strong><code>orientation</code></strong>: Direção da pista (<code>"horizontal"</code> ou <code>"vertical"</code>).</li>
+            <li><strong><code>x</code></strong>: Posição horizontal da pista (em <code>px</code> ou <code>%</code>).</li>
+            <li><strong><code>y</code></strong>: Posição vertical da pista (em <code>px</code> ou <code>%</code>).</li>
         </ul>
 
-        <h2>👀 Exemplo ao Vivo</h2>
+        <h2>👀 Exemplos Práticos</h2>
+
+        <h3>1. Pista Horizontal</h3>
+        <pre><code>&lt;script&gt;
+    new ZuniRoad({
+        width: "90%",
+        height: "200px",
+        speed: "1s",
+        orientation: "horizontal",
+        x: "5%",
+        y: "50%"
+    });
+&lt;/script&gt;</code></pre>
         <div class="preview">
-            <p><strong>Pré-visualização da Pista</strong></p>
+            <p><strong>Pré-visualização da Pista Horizontal</strong></p>
             <script>
                 new ZuniRoad({
-                    width: "80%",
+                    width: "90%",
                     height: "200px",
-                    speed: "1.5s",
+                    speed: "1s",
                     orientation: "horizontal",
-                    x: "10%",
+                    x: "5%",
                     y: "50%"
                 });
             </script>
         </div>
+
+        <h3>2. Pista Vertical</h3>
+        <pre><code>&lt;script&gt;
+    new ZuniRoad({
+        width: "200px",
+        height: "80%",
+        speed: "1.5s",
+        orientation: "vertical",
+        x: "50%",
+        y: "10%"
+    });
+&lt;/script&gt;</code></pre>
+        <div class="preview">
+            <p><strong>Pré-visualização da Pista Vertical</strong></p>
+            <script>
+                new ZuniRoad({
+                    width: "200px",
+                    height: "80%",
+                    speed: "1.5s",
+                    orientation: "vertical",
+                    x: "50%",
+                    y: "10%"
+                });
+            </script>
+        </div>
+
+        <h3>3. Pista com Container Personalizado</h3>
+        <pre><code>&lt;div id="custom-road" style="width: 300px; height: 400px; margin: 20px auto;"&gt;&lt;/div&gt;
+&lt;script&gt;
+    new ZuniRoad({
+        container: "#custom-road",
+        width: "100%",
+        height: "100%",
+        speed: "2s",
+        orientation: "vertical"
+    });
+&lt;/script&gt;</code></pre>
+        <div class="preview">
+            <p><strong>Pré-visualização da Pista com Container Personalizado</strong></p>
+            <div id="custom-road" style="width: 300px; height: 400px; margin: 20px auto;"></div>
+            <script>
+                new ZuniRoad({
+                    container: "#custom-road",
+                    width: "100%",
+                    height: "100%",
+                    speed: "2s",
+                    orientation: "vertical"
+                });
+            </script>
+        </div>
+
+        <h2>📝 Notas</h2>
+        <ul>
+            <li>Certifique-se de que o container especificado exista no DOM.</li>
+            <li>As animações são baseadas em CSS, garantindo desempenho suave.</li>
+            <li>Personalize as cores e estilos diretamente no CSS injetado pela biblioteca.</li>
+        </ul>
     </div>
 
     <footer>
