@@ -1,11 +1,17 @@
 class ZuniRoad {
     constructor(options = {}) {
+        this.container = options.container ? document.querySelector(options.container) : document.body;
         this.width = options.width || "90%";
         this.height = options.height || "200px";
         this.speed = options.speed || "1s";
         this.orientation = options.orientation || "horizontal"; // 'horizontal' ou 'vertical'
         this.x = options.x || "50%"; // Posição X
         this.y = options.y || "50%"; // Posição Y
+
+        if (!this.container) {
+            console.error("ZuniRoad.js: O container especificado não foi encontrado.");
+            return;
+        }
 
         this.createRoad();
     }
@@ -16,9 +22,8 @@ class ZuniRoad {
         this.road.classList.add("zuni-road");
         this.road.style.width = this.orientation === "horizontal" ? this.width : this.height;
         this.road.style.height = this.orientation === "horizontal" ? this.height : this.width;
-        this.road.style.left = typeof this.x === "number" ? `${this.x}px` : this.x;
-        this.road.style.top = typeof this.y === "number" ? `${this.y}px` : this.y;
-        this.road.style.transform = this.orientation === "vertical" ? "rotate(90deg)" : "none";
+        this.road.style.position = "relative";
+        this.road.style.overflow = "hidden";
 
         // Criando as faixas centrais
         this.laneMarkings = document.createElement("div");
@@ -45,8 +50,8 @@ class ZuniRoad {
         this.road.appendChild(this.sideLineBottom);
         this.road.appendChild(this.lpp);
 
-        // Adicionando a pista ao corpo da página
-        document.body.appendChild(this.road);
+        // Adicionando a pista ao container
+        this.container.appendChild(this.road);
 
         this.injectStyles();
     }
@@ -55,12 +60,9 @@ class ZuniRoad {
         const style = document.createElement("style");
         style.innerHTML = `
             .zuni-road {
-                position: absolute;
                 background-color: #4d4d4d;
                 border-top: 10px solid yellow;
                 border-bottom: 10px solid yellow;
-                overflow: hidden;
-                transform-origin: center;
             }
 
             .zuni-lane-markings {
