@@ -94,6 +94,7 @@
         <h3>1. Pista Horizontal</h3>
         <pre><code>&lt;script&gt;
     new ZuniRoad({
+        container: "#horizontal-road",
         width: "90%",
         height: "200px",
         speed: "1s",
@@ -102,24 +103,25 @@
         y: "50%"
     });
 &lt;/script&gt;</code></pre>
-        <div class="preview">
+        <div class="preview" id="horizontal-road">
             <p><strong>Pré-visualização da Pista Horizontal</strong></p>
-            <script>
-                new ZuniRoad({
-                    container: ".preview", // Renderiza dentro da div .preview
-                    width: "90%",
-                    height: "200px",
-                    speed: "1s",
-                    orientation: "horizontal",
-                    x: "5%",
-                    y: "50%"
-                });
-            </script>
         </div>
+        <script>
+            new ZuniRoad({
+                container: "#horizontal-road",
+                width: "90%",
+                height: "200px",
+                speed: "1s",
+                orientation: "horizontal",
+                x: "5%",
+                y: "50%"
+            });
+        </script>
 
         <h3>2. Pista Vertical</h3>
         <pre><code>&lt;script&gt;
     new ZuniRoad({
+        container: "#vertical-road",
         width: "200px",
         height: "80%",
         speed: "1.5s",
@@ -128,20 +130,20 @@
         y: "10%"
     });
 &lt;/script&gt;</code></pre>
-        <div class="preview">
+        <div class="preview" id="vertical-road">
             <p><strong>Pré-visualização da Pista Vertical</strong></p>
-            <script>
-                new ZuniRoad({
-                    container: ".preview", // Renderiza dentro da div .preview
-                    width: "200px",
-                    height: "80%",
-                    speed: "1.5s",
-                    orientation: "vertical",
-                    x: "50%",
-                    y: "10%"
-                });
-            </script>
         </div>
+        <script>
+            new ZuniRoad({
+                container: "#vertical-road",
+                width: "200px",
+                height: "80%",
+                speed: "1.5s",
+                orientation: "vertical",
+                x: "50%",
+                y: "10%"
+            });
+        </script>
 
         <h3>3. Pista com Container Personalizado</h3>
         <pre><code>&lt;div id="custom-road" style="width: 300px; height: 200px; margin: 20px auto;"&gt;&lt;/div&gt;
