@@ -26,11 +26,16 @@ class ZuniRoad {
             this.road.style.width = this.width;
             this.road.style.height = this.height;
         } else {
-            this.road.style.width = this.height; // Inverte para vertical
-            this.road.style.height = this.width; // Inverte para vertical
+            // Inverte width e height para orientação vertical
+            this.road.style.width = this.height;
+            this.road.style.height = this.width;
         }
 
-        this.road.style.position = "relative";
+        // Aplicando posição X e Y
+        this.road.style.position = "absolute"; // Alterado para absolute para permitir posicionamento
+        this.road.style.left = this.x; // Posição X
+        this.road.style.top = this.y; // Posição Y
+        this.road.style.transform = "translate(-50%, -50%)"; // Centraliza a pista nas coordenadas X e Y
         this.road.style.overflow = "hidden";
 
         // Criando as faixas centrais
@@ -76,6 +81,7 @@ class ZuniRoad {
 
         // Ajustando as faixas laterais para orientação vertical
         if (this.orientation === "vertical") {
+            // Faixas laterais verticais
             this.sideLineTop.style.width = "10px";
             this.sideLineTop.style.height = "100%";
             this.sideLineTop.style.top = "0";
@@ -86,6 +92,7 @@ class ZuniRoad {
             this.sideLineBottom.style.top = "0";
             this.sideLineBottom.style.right = "-10px";
         } else {
+            // Faixas laterais horizontais
             this.sideLineTop.style.width = "100%";
             this.sideLineTop.style.height = "10px";
             this.sideLineTop.style.top = "-10px";
