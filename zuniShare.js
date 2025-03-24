@@ -1,11 +1,25 @@
 const ZuniShare = (() => {
-  async function shareImage(file, message = "Veja só essa imagem!") {
-    if (!file) return alert("Selecione uma imagem!");
+  async function shareImage(imagem, message = "Veja só essa imagem!") {
+    if (!imagem) return alert("Selecione uma imagem válida!");
 
     const img = new Image();
-    img.src = URL.createObjectURL(file);
+    
+    // Se for um arquivo local
+    if (imagem instanceof File) {
+      img.src = URL.createObjectURL(imagem);
+    } else if (typeof imagem === "string" && imagem.startsWith("http")) {
+      // Se for uma URL
+      img.src = imagem;
+    } else {
+      return alert("Formato de imagem não suportado.");
+    }
 
     img.onload = () => {
+      // Calcula a largura e altura originais da imagem
+      const originalWidth = img.width;
+      const originalHeight = img.height;
+      
+      // Calcula o canvas com a mesma largura e altura da imagem original
       const cv = Object.assign(document.createElement("canvas"), { width: img.width, height: img.height });
       const ctx = cv.getContext("2d");
 
@@ -15,7 +29,7 @@ const ZuniShare = (() => {
       ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
       ctx.fillRect(0, 0, img.width, img.height);
 
-      // Configurações iniciais
+      // Ajustar a fonte para caber na imagem
       let fontSize = 30;
       let maxWidth = img.width * 0.8; // O texto não deve ultrapassar 80% da largura da imagem
       ctx.font = `bold ${fontSize}px Arial`;
@@ -54,9 +68,17 @@ const ZuniShare = (() => {
 
       lines = wrapText(message, maxWidth); // Divida o texto em várias linhas
 
-      // Calcula a posição inicial para centralizar o texto
+      // Calcula a altura necessária para acomodar o texto
       let totalHeight = lines.length * fontSize * 1.2;
-      let startY = (img.height - totalHeight) / 2;
+      
+      // Se a altura do texto exceder a altura da imagem original, estique a imagem
+      if (totalHeight > img.height) {
+        cv.height = totalHeight; // Ajusta a altura do canvas
+        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width, totalHeight); // Redimensiona a imagem no canvas
+      }
+
+      // Calcula a posição inicial para centralizar o texto
+      let startY = (cv.height - totalHeight) / 2;
 
       // Desenha as linhas de texto
       ctx.fillStyle = "white";
@@ -64,7 +86,7 @@ const ZuniShare = (() => {
         ctx.fillText(line, img.width / 2, startY + index * fontSize * 1.2);
       });
 
-      // Cria o blob e compartilha a imagem
+      // Cria o blob com qualidade alta para o JPEG
       cv.toBlob(blob => {
         const newFile = new File([blob], "imagem_compartilhada.jpg", { type: "image/jpeg" });
 
@@ -73,7 +95,11 @@ const ZuniShare = (() => {
         } else {
           alert("Seu navegador não suporta compartilhamento de arquivos.");
         }
-      }, "image/jpeg");
+      }, "image/jpeg", 0.95); // 0.95 para qualidade alta (pode variar de 0 a 1)
+    };
+
+    img.onerror = () => {
+      alert("Falha ao carregar a imagem. Verifique o URL ou o arquivo.");
     };
   }
 
