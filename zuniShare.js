@@ -15,26 +15,54 @@ const ZuniShare = (() => {
       ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
       ctx.fillRect(0, 0, img.width, img.height);
 
-      // Ajustar a fonte para caber na imagem
+      // Configurações iniciais
       let fontSize = 30;
       let maxWidth = img.width * 0.8; // O texto não deve ultrapassar 80% da largura da imagem
       ctx.font = `bold ${fontSize}px Arial`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
+      let lines = [];
 
-      // A medida do texto
+      // Função para dividir o texto em várias linhas
+      function wrapText(text, maxWidth) {
+        let words = text.split(" ");
+        let line = "";
+        let lineHeight = fontSize * 1.2; // Distância entre linhas
+
+        for (let i = 0; i < words.length; i++) {
+          let testLine = line + words[i] + " ";
+          let testWidth = ctx.measureText(testLine).width;
+
+          if (testWidth > maxWidth && i > 0) {
+            lines.push(line); // Adiciona a linha atual
+            line = words[i] + " "; // Inicia uma nova linha com a palavra atual
+          } else {
+            line = testLine; // Adiciona a palavra à linha atual
+          }
+        }
+        lines.push(line); // Adiciona a última linha
+        return lines;
+      }
+
+      // Ajuste de fonte para garantir que o texto caiba
       let textWidth = ctx.measureText(message).width;
-
-      // Reduz o tamanho da fonte até o texto caber
       while (textWidth > maxWidth && fontSize > 10) {
         fontSize -= 2;
         ctx.font = `bold ${fontSize}px Arial`;
         textWidth = ctx.measureText(message).width;
       }
 
-      // Centraliza o texto
+      lines = wrapText(message, maxWidth); // Divida o texto em várias linhas
+
+      // Calcula a posição inicial para centralizar o texto
+      let totalHeight = lines.length * fontSize * 1.2;
+      let startY = (img.height - totalHeight) / 2;
+
+      // Desenha as linhas de texto
       ctx.fillStyle = "white";
-      ctx.fillText(message, img.width / 2, img.height / 2);
+      lines.forEach((line, index) => {
+        ctx.fillText(line, img.width / 2, startY + index * fontSize * 1.2);
+      });
 
       // Cria o blob e compartilha a imagem
       cv.toBlob(blob => {
