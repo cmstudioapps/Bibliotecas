@@ -15,15 +15,28 @@ const ZuniShare = (() => {
       ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
       ctx.fillRect(0, 0, img.width, img.height);
 
-      // Configura o texto
-      ctx.fillStyle = "white";
-      ctx.font = "bold 30px Arial";
+      // Ajustar a fonte para caber na imagem
+      let fontSize = 30;
+      let maxWidth = img.width * 0.8; // O texto não deve ultrapassar 80% da largura da imagem
+      ctx.font = `bold ${fontSize}px Arial`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 
-      // Centraliza a mensagem
+      // A medida do texto
+      let textWidth = ctx.measureText(message).width;
+
+      // Reduz o tamanho da fonte até o texto caber
+      while (textWidth > maxWidth && fontSize > 10) {
+        fontSize -= 2;
+        ctx.font = `bold ${fontSize}px Arial`;
+        textWidth = ctx.measureText(message).width;
+      }
+
+      // Centraliza o texto
+      ctx.fillStyle = "white";
       ctx.fillText(message, img.width / 2, img.height / 2);
 
+      // Cria o blob e compartilha a imagem
       cv.toBlob(blob => {
         const newFile = new File([blob], "imagem_compartilhada.jpg", { type: "image/jpeg" });
 
