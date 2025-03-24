@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentação - ZuniShare.js</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #121212;
+            color: #fff;
+        }
+        h1, h2 {
+            color: #ff9800;
+        }
+        pre {
+            background: #1e1e1e;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            color: #00ff00;
+        }
+        code {
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        .box {
+            background: #222;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        a {
+            color: #ff9800;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📜 ZuniShare.js - Documentação Oficial</h1>
+    <p>ZuniShare.js permite compartilhar imagens com um texto personalizado sobreposto.</p>
+
+    <div class="box">
+        <h2>📥 Importação da Biblioteca</h2>
+        <p>Inclua a seguinte linha no seu HTML para carregar a biblioteca:</p>
+        <pre><code>&lt;script src="https://caiolibs.vercel.app/zuniShare.js"&gt;&lt;/script&gt;</code></pre>
+    </div>
+
+    <div class="box">
+        <h2>📌 Como Usar</h2>
+        <p>Adicione um input para selecionar a imagem e um botão para chamar a função:</p>
+        <pre><code>&lt;input type="file" id="imagem"&gt;
+&lt;button onclick="compartilhar()"&gt;Compartilhar&lt;/button&gt;</code></pre>
+
+        <p>Crie a função para compartilhar:</p>
+        <pre><code>function compartilhar() {
+    const arquivo = document.getElementById("imagem").files[0];
+    ZuniShare.shareImage(arquivo, "Minha mensagem personalizada!");
+}</code></pre>
+    </div>
+
+    <div class="box">
+        <h2>📖 API da Biblioteca</h2>
+        <h3>🔹 <code>ZuniShare.shareImage(file, message)</code></h3>
+        <p><strong>Descrição:</strong> Compartilha uma imagem com um texto sobreposto.</p>
+        <p><strong>Parâmetros:</strong></p>
+        <ul>
+            <li><code>file</code> - <i>(File)</i> O arquivo da imagem a ser compartilhada.</li>
+            <li><code>message</code> - <i>(String, opcional)</i> Texto sobreposto na imagem (padrão: <code>"Veja só essa imagem!"</code>).</li>
+        </ul>
+
+        <p><strong>Exemplo de uso:</strong></p>
+        <pre><code>ZuniShare.shareImage(meuArquivo, "Confira essa imagem incrível!");</code></pre>
+    </div>
+
+    <div class="box">
+        <h2>💡 Recursos e Funcionalidades</h2>
+        <ul>
+            <li>✔ Escurece o fundo da imagem para destacar o texto.</li>
+            <li>✔ Centraliza a mensagem automaticamente.</li>
+            <li>✔ Usa <code>navigator.share()</code> para compartilhamento nativo.</li>
+            <li>✔ Verifica se o navegador suporta compartilhamento de arquivos.</li>
+        </ul>
+    </div>
+
+    <div class="box">
+        <h2>⚠️ Requisitos</h2>
+        <ul>
+            <li>⚠ A API <code>navigator.share()</code> só funciona em dispositivos móveis e navegadores compatíveis.</li>
+            <li>⚠ Apenas arquivos de imagem podem ser compartilhados.</li>
+            <li>⚠ O usuário deve selecionar uma imagem antes de chamar a função.</li>
+        </ul>
+    </div>
+
+    <div class="box">
+        <h2>🛠 Suporte e Atualizações</h2>
+        <p>📌 A biblioteca será mantida e atualizada em <a href="https://caiolibs.vercel.app/" target="_blank">caiolibs.vercel.app</a>.</p>
+    </div>
+</div>
+
+</body>
+</html>
