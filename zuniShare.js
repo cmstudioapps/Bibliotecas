@@ -3,7 +3,7 @@ const ZuniShare = (() => {
     if (!imagem) return alert("Selecione uma imagem válida!");
 
     const img = new Image();
-    
+
     // Se for um arquivo local
     if (imagem instanceof File) {
       img.src = URL.createObjectURL(imagem);
@@ -18,7 +18,7 @@ const ZuniShare = (() => {
       // Calcula a largura e altura originais da imagem
       const originalWidth = img.width;
       const originalHeight = img.height;
-      
+
       // Calcula o canvas com a mesma largura e altura da imagem original
       const cv = Object.assign(document.createElement("canvas"), { width: img.width, height: img.height });
       const ctx = cv.getContext("2d");
@@ -70,7 +70,7 @@ const ZuniShare = (() => {
 
       // Calcula a altura necessária para acomodar o texto
       let totalHeight = lines.length * fontSize * 1.2;
-      
+
       // Se a altura do texto exceder a altura da imagem original, estique a imagem
       if (totalHeight > img.height) {
         cv.height = totalHeight; // Ajusta a altura do canvas
@@ -103,5 +103,38 @@ const ZuniShare = (() => {
     };
   }
 
-  return { shareImage };
+  async function shareDivAsImage(divSelector, fileName = "compartilhado.png") {
+    const div = document.querySelector(divSelector);
+    if (!div) return alert("Elemento não encontrado!");
+
+    try {
+      const { toPng } = await import("https://cdn.jsdelivr.net/npm/html-to-image/+esm");
+      const dataUrl = await toPng(div);
+
+      const img = new Image();
+      img.src = dataUrl;
+
+      img.onload = () => {
+        const cv = Object.assign(document.createElement("canvas"), { width: img.width, height: img.height });
+        const ctx = cv.getContext("2d");
+
+        ctx.drawImage(img, 0, 0);
+
+        // Gera o arquivo Blob
+        cv.toBlob(blob => {
+          const newFile = new File([blob], fileName, { type: "image/png" });
+
+          if (navigator.canShare?.({ files: [newFile] })) {
+            navigator.share({ files: [newFile] }).catch(console.error);
+          } else {
+            alert("Seu navegador não suporta compartilhamento de arquivos.");
+          }
+        }, "image/png");
+      };
+    } catch (error) {
+      console.error("Erro ao converter o elemento em imagem:", error);
+    }
+  }
+
+  return { shareImage, shareDivAsImage };
 })();
