@@ -1,4 +1,14 @@
 const ZuniShare = (() => {
+  // Importa a biblioteca assim que o script é carregado
+  let htmlToImage;
+  import("https://cdn.jsdelivr.net/npm/html-to-image/+esm")
+    .then(module => {
+      htmlToImage = module;
+    })
+    .catch(error => {
+      console.error("Erro ao importar a biblioteca html-to-image:", error);
+    });
+
   async function shareImage(imagem, message = "Veja só essa imagem!") {
     if (!imagem) return alert("Selecione uma imagem válida!");
 
@@ -80,12 +90,15 @@ const ZuniShare = (() => {
   }
 
   async function shareDivAsImage(divSelector, fileName = "compartilhado.png") {
+    if (!htmlToImage) {
+      return alert("A biblioteca html-to-image não foi carregada corretamente.");
+    }
+
     const div = document.querySelector(divSelector);
     if (!div) return alert("Elemento não encontrado!");
 
     try {
-      const { toPng } = await import("https://cdn.jsdelivr.net/npm/html-to-image/+esm");
-      const dataUrl = await toPng(div, {
+      const dataUrl = await htmlToImage.toPng(div, {
         style: {
           backgroundColor: getComputedStyle(div).backgroundColor, // Captura a cor de fundo
           backgroundImage: getComputedStyle(div).backgroundImage, // Captura a imagem de fundo
