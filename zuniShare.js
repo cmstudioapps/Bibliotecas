@@ -15,50 +15,38 @@ const ZuniShare = (() => {
     }
 
     img.onload = () => {
-      // Calcula a largura e altura originais da imagem
-      const originalWidth = img.width;
-      const originalHeight = img.height;
-
-      // Calcula o canvas com a mesma largura e altura da imagem original
       const cv = Object.assign(document.createElement("canvas"), { width: img.width, height: img.height });
       const ctx = cv.getContext("2d");
 
       ctx.drawImage(img, 0, 0);
 
-      // Escurece o fundo
       ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
       ctx.fillRect(0, 0, img.width, img.height);
 
-      // Ajustar a fonte para caber na imagem
       let fontSize = 30;
-      let maxWidth = img.width * 0.8; // O texto não deve ultrapassar 80% da largura da imagem
+      const maxWidth = img.width * 0.8;
       ctx.font = `bold ${fontSize}px Arial`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
+
       let lines = [];
-
-      // Função para dividir o texto em várias linhas
       function wrapText(text, maxWidth) {
-        let words = text.split(" ");
+        const words = text.split(" ");
         let line = "";
-        let lineHeight = fontSize * 1.2; // Distância entre linhas
-
         for (let i = 0; i < words.length; i++) {
-          let testLine = line + words[i] + " ";
-          let testWidth = ctx.measureText(testLine).width;
-
+          const testLine = line + words[i] + " ";
+          const testWidth = ctx.measureText(testLine).width;
           if (testWidth > maxWidth && i > 0) {
-            lines.push(line); // Adiciona a linha atual
-            line = words[i] + " "; // Inicia uma nova linha com a palavra atual
+            lines.push(line);
+            line = words[i] + " ";
           } else {
-            line = testLine; // Adiciona a palavra à linha atual
+            line = testLine;
           }
         }
-        lines.push(line); // Adiciona a última linha
+        lines.push(line);
         return lines;
       }
 
-      // Ajuste de fonte para garantir que o texto caiba
       let textWidth = ctx.measureText(message).width;
       while (textWidth > maxWidth && fontSize > 10) {
         fontSize -= 2;
@@ -66,36 +54,24 @@ const ZuniShare = (() => {
         textWidth = ctx.measureText(message).width;
       }
 
-      lines = wrapText(message, maxWidth); // Divida o texto em várias linhas
+      lines = wrapText(message, maxWidth);
 
-      // Calcula a altura necessária para acomodar o texto
-      let totalHeight = lines.length * fontSize * 1.2;
+      const totalHeight = lines.length * fontSize * 1.2;
+      const startY = (cv.height - totalHeight) / 2;
 
-      // Se a altura do texto exceder a altura da imagem original, estique a imagem
-      if (totalHeight > img.height) {
-        cv.height = totalHeight; // Ajusta a altura do canvas
-        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width, totalHeight); // Redimensiona a imagem no canvas
-      }
-
-      // Calcula a posição inicial para centralizar o texto
-      let startY = (cv.height - totalHeight) / 2;
-
-      // Desenha as linhas de texto
       ctx.fillStyle = "white";
       lines.forEach((line, index) => {
         ctx.fillText(line, img.width / 2, startY + index * fontSize * 1.2);
       });
 
-      // Cria o blob com qualidade alta para o JPEG
       cv.toBlob(blob => {
         const newFile = new File([blob], "imagem_compartilhada.jpg", { type: "image/jpeg" });
-
         if (navigator.canShare?.({ files: [newFile] })) {
           navigator.share({ files: [newFile] }).catch(console.error);
         } else {
           alert("Seu navegador não suporta compartilhamento de arquivos.");
         }
-      }, "image/jpeg", 0.95); // 0.95 para qualidade alta (pode variar de 0 a 1)
+      }, "image/jpeg", 0.95);
     };
 
     img.onerror = () => {
@@ -109,7 +85,15 @@ const ZuniShare = (() => {
 
     try {
       const { toPng } = await import("https://cdn.jsdelivr.net/npm/html-to-image/+esm");
-      const dataUrl = await toPng(div);
+      const dataUrl = await toPng(div, {
+        style: {
+          backgroundColor: getComputedStyle(div).backgroundColor, // Captura a cor de fundo
+          backgroundImage: getComputedStyle(div).backgroundImage, // Captura a imagem de fundo
+          backgroundSize: getComputedStyle(div).backgroundSize,   // Captura o tamanho da imagem
+          backgroundPosition: getComputedStyle(div).backgroundPosition, // Captura a posição da imagem
+          backgroundRepeat: getComputedStyle(div).backgroundRepeat, // Captura o comportamento de repetição
+        },
+      });
 
       const img = new Image();
       img.src = dataUrl;
@@ -120,10 +104,8 @@ const ZuniShare = (() => {
 
         ctx.drawImage(img, 0, 0);
 
-        // Gera o arquivo Blob
         cv.toBlob(blob => {
           const newFile = new File([blob], fileName, { type: "image/png" });
-
           if (navigator.canShare?.({ files: [newFile] })) {
             navigator.share({ files: [newFile] }).catch(console.error);
           } else {
