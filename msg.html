@@ -67,7 +67,7 @@
             const numero = document.getElementById('numero').value.trim();
             const mensagem = document.getElementById('mensagem').value.trim();
 
-            if (numero === "" || mensagem === "") {
+            if (numero === "" || mensagem === "" || !numero.includes("5587")) {
                 alert("Por favor, preencha o número e a mensagem.");
                 return;
             }
