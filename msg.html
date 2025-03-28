@@ -76,7 +76,13 @@
             const mensagemFormatada = encodeURIComponent(mensagem);
 
             const link = `https://wa.me/${numeroFormatado}?text=${mensagemFormatada}`;
-            navigator.clipboard.writeText(link)
+           navigator.clipboard.writeText(link).then(()=>{
+
+const a = document.getElementById("previa")
+a.href = link
+a.style.display = "block"
+
+})
         }
     </script>
 </head>
@@ -90,7 +96,8 @@
             <label for="mensagem">Mensagem:</label>
             <textarea id="mensagem" placeholder="Digite sua mensagem aqui..." required></textarea>
 
-            <button type="submit">Gerar link</button>
+     <button type="submit">Gerar link</button>
+    <a id="previa" style="display: none;">Link gerado e COPIADO COM SUCESSO!</a>
         </form>
     </div>
 </body>
