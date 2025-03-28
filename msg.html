@@ -76,7 +76,7 @@
             const mensagemFormatada = encodeURIComponent(mensagem);
 
             const link = `https://wa.me/${numeroFormatado}?text=${mensagemFormatada}`;
-            window.open(link, '_blank');
+            navigator.clipboard.writeText(link)
         }
     </script>
 </head>
@@ -90,7 +90,7 @@
             <label for="mensagem">Mensagem:</label>
             <textarea id="mensagem" placeholder="Digite sua mensagem aqui..." required></textarea>
 
-            <button type="submit">Enviar Mensagem</button>
+            <button type="submit">Gerar link</button>
         </form>
     </div>
 </body>
