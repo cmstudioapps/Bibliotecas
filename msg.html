@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enviar Mensagem no WhatsApp</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: none;
+            height: 80px;
+        }
+        button {
+            background-color: #25d366;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #1ebc59;
+        }
+    </style>
+    <script>
+        function gerarLinkWhatsApp() {
+            const numero = document.getElementById('numero').value.trim();
+            const mensagem = document.getElementById('mensagem').value.trim();
+
+            if (numero === "" || mensagem === "") {
+                alert("Por favor, preencha o número e a mensagem.");
+                return;
+            }
+
+            const numeroFormatado = numero.replace(/\D/g, '');
+            const mensagemFormatada = encodeURIComponent(mensagem);
+
+            const link = `https://wa.me/${numeroFormatado}?text=${mensagemFormatada}`;
+            window.open(link, '_blank');
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Enviar mensagem no WhatsApp</h1>
+        <form onsubmit="event.preventDefault(); gerarLinkWhatsApp();">
+            <label for="numero">Número (com DDD):</label>
+            <input type="text" id="numero" placeholder="Ex.: 5587991470000" required>
+
+            <label for="mensagem">Mensagem:</label>
+            <textarea id="mensagem" placeholder="Digite sua mensagem aqui..." required></textarea>
+
+            <button type="submit">Enviar Mensagem</button>
+        </form>
+    </div>
+</body>
+</html>
