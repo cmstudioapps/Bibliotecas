@@ -17,9 +17,10 @@ const jsonConverter = (() => {
   };
 })();
 
-// Exemplo de uso:
+/* Exemplo de uso:
 const obj = { nome: 'Caio', idade: 25 };
 const arr = [1, 2, 3];
 
 console.log(jsonConverter.toJSON(obj));
 console.log(jsonConverter.toJSON(arr));
+*/
