@@ -1,5 +1,8 @@
 (function () {
   const unidades = [
+    { valor: 1e24, sufixo: "SEX" }, // 1 septilhão
+    { valor: 1e21, sufixo: "QUI" }, // 1 sextilhão
+    { valor: 1e18, sufixo: "HEX" }, // 1 quintilhão
     { valor: 1e15, sufixo: "QUA" },
     { valor: 1e12, sufixo: "TRI" },
     { valor: 1e9,  sufixo: "BI" },
@@ -13,7 +16,7 @@
     for (let i = 0; i < unidades.length; i++) {
       if (num >= unidades[i].valor) {
         const resultado = num / unidades[i].valor;
-        return (resultado.toFixed(1).replace(".0", "") + unidades[i].sufixo);
+        return resultado.toFixed(1).replace(".0", "") + unidades[i].sufixo;
       }
     }
 
@@ -21,23 +24,24 @@
   }
 
   function formatarTexto(texto) {
-    return texto.replace(/\b\d{1,3}(?:[\d,. ]*\d)?\b/g, match => {
-      const limpo = match.replace(/[,. ]/g, "");
-      if (limpo.includes("e+")) return match; // já é notação científica, não mexe
-      const numero = parseFloat(limpo);
-      if (isNaN(numero) || numero < 1000 || !isFinite(numero)) return match;
-      return formatarNumero(numero);
+    return texto.replace(/(\d+(?:[\d,. ]*\d+)?(?:e\+\d+)?)/gi, match => {
+      let num;
+      try {
+        num = Number(match.replace(/[, ]/g, ""));
+      } catch {
+        return match;
+      }
+      if (isNaN(num) || num < 1000) return match;
+      return formatarNumero(num);
     });
   }
 
   function percorrerElementos(el) {
     if (el.nodeType === 3) {
-      const textoOriginal = el.nodeValue;
-      const textoFormatado = formatarTexto(textoOriginal);
-      if (textoOriginal !== textoFormatado) {
-        el.nodeValue = textoFormatado;
-      }
-    } else if (el.nodeType === 1 && !["SCRIPT", "STYLE", "NOSCRIPT", "IFRAME", "CODE", "PRE"].includes(el.tagName)) {
+      const original = el.nodeValue;
+      const novo = formatarTexto(original);
+      if (original !== novo) el.nodeValue = novo;
+    } else if (el.nodeType === 1 && !["SCRIPT", "STYLE", "IFRAME", "NOSCRIPT", "CODE", "PRE"].includes(el.tagName)) {
       el.childNodes.forEach(percorrerElementos);
     }
   }
